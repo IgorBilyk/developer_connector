@@ -1,0 +1,7 @@
+{
+    "mongoURI":"mongodb+srv://igor:igor@cluster0.q47s5.mongodb.net/?retryWrites=true&w=majority",
+    "ACCESS_TOKEN" : "_access_key_jwt",
+    "REFRESH_TOKEN" : "refresh_key_jwt",
+    "GITHUB_CLIENT_ID":"a0281aebd2e0d998a300",
+    "GITHUB_CLIENT_SECRET":"28bbb3497febf40a7950c0828263a8596b8c1559"
+}

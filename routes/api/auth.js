@@ -8,8 +8,8 @@ const auth = require("../../midleware/auth");
 const User = require("../../models/User");
 /* const secret_key = config.get("ACCESS_TOKEN");
 const refresh_key = config.get("REFRESH_TOKEN"); */
-const secret_key = 12
-const refresh_key = 12323
+const secret_key = 12;
+const refresh_key = 12323;
 
 // route - get user
 //@ access private
@@ -28,18 +28,33 @@ router.get("/auth", auth, async (req, res) => {
 
 //Create access/refresh token
 // route - authenticate user & get token /auth login
-const accessToken = ({ id }) => {
-  jwt.sign(id, secret_key, { expiresIn: "15min" }, (err, token) => {
-    if (err) throw err;
-    return token;
-  });
+const accessToken = (id) => {
+  /*  const token = jwt.sign(
+    id,
+    secret_key,
+    { expiresIn: "15min" },
+    (err, token) => {
+      if (err) throw err;
+      return token;
+    }
+  ); */
+  return id;
 };
-const refreshToken = ({ id }) => {
-  jwt.sign(id, refresh_key, { expiresIn: "15" }, (err, token) => {
-    if (err) throw err;
-    return token;
-  });
+const refreshToken = (id) => {
+  /* const token = jwt.sign(
+    id,
+    refresh_key,
+    { expiresIn: "15d" },
+    (err, token) => {
+      if (err) throw err;
+      return token;
+    }
+  ); */
+  return id;
 };
+
+//Login route
+// @access public
 router.post(
   "/auth",
 
@@ -66,10 +81,13 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: "Invalid Credentials " }] });
 
-      const accessTok = accessToken(user);
-      const refreshTok = refreshToken(user);
+      const accessTok = accessToken(user._id);
+      const refreshTok = refreshToken(user._id);
+      res.cookie("token", refreshTok, { httpOnly: true });
+
+      res.json({ accessTok, refreshTok, user });
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message, "error");
       res.status(500).send("Server Error");
     }
   }

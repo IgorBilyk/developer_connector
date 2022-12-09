@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 //import axios from "axios ";
 import { Link } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../store/features/actions";
 
@@ -8,14 +9,15 @@ import "../../App.css";
 import Alert from "../layout/Alert";
 
 const Login = () => {
+  //redux state initialization
   const dispatch = useDispatch();
+  const stateData = useSelector((state) => state.register);
+  const { loggInError } = stateData;
+
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-
-  const errors = useSelector((state) => state.register.errorMessages);
-  const state = useSelector((state) => state.register);
 
   const { email, password } = inputs;
 
@@ -26,7 +28,7 @@ const Login = () => {
     }));
   };
   //login User
-  const loginUser = (data) => {
+  /*  const loginUser = (data) => {
     try {
       const config = {
         headers: {
@@ -41,11 +43,12 @@ const Login = () => {
           console.log(`Success ${result.accessTok}`);
           localStorage.setItem("accessToken", result.accessTok);
           localStorage.setItem("data", JSON.stringify(result.user));
+          window.location = "/dashboard";
         });
     } catch (err) {
       console.log(err);
     }
-  };
+  }; */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -54,16 +57,23 @@ const Login = () => {
       password,
     };
 
-    /*  dispatch(loginUser(data)); */
-    loginUser(data);
+    dispatch(loginUser(data));
+    // loginUser(data);
   };
+
   return (
     <section className="container">
-      {errors.length > 0 ? <Alert /> : ""}
+      {/*       {errors.length > 0 ? <Alert /> : ""}
+       */}{" "}
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Sign into Your Account
       </p>
+      {loggInError?.errors
+        ? loggInError.errors.map((error) => (
+            <h4 className="error">{error.msg}</h4>
+          ))
+        : ""}
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input

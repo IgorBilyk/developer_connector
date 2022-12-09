@@ -44,7 +44,7 @@ export const loginUser = createAsyncThunk(
         },
       };
       const res = await axios.post("/auth", arg, config);
-
+      console.log(res);
       return res;
     } catch (err) {
       return rejectWithValue(err.response.data);

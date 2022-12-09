@@ -1,7 +1,8 @@
 //racf short code to create component
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 //Components
 import Navbar from "./components/layout/Navbar";
 import NotFound from "./components/layout/NotFound";
@@ -24,26 +25,20 @@ export const globalStateContext = React.createContext(
 );
 
 function App() {
+  const stateData = useSelector((state) => state.register);
+  const { isLoggedIn } = stateData;
+
+  const handlelogout = () => {
+    localStorage.removeItem("data");
+    localStorage.removeItem("accessToken");
+  };
   const [userData, setUserData] = useState(
     localStorage.getItem("data")
       ? JSON.parse(localStorage.getItem("data"))
       : null
   );
-
-  const dispatch = useDispatch();
-
-  const state = useSelector((state) => state.register);
-
-  /* useEffect(() => {
-    if (localStorage.getItem("data")) {
-      setUserData(localStorage.getItem("data"));
-    } else {
-      setUserData(null);
-    }
-    console.log(userData);
-  }, []); */
-  /*   console.log(userData.name);
-   */ return (
+  console.log(stateData.isLoggedIn);
+  return (
     <Router>
       <globalStateContext.Provider value={userData}>
         <Fragment>
@@ -54,32 +49,32 @@ function App() {
             <Route exact path="register" element={<Register />} />
             <Route
               path="login"
-              element={userData?.name ? <Profiles /> : <Login />}
+              element={isLoggedIn ? <Profiles /> : <Login />}
             />
             <Route
               path="profiles"
-              element={userData?.name ? <Profiles /> : <Login />}
+              element={isLoggedIn ? <Profiles /> : <Login />}
             />
             <Route
               path="dashboard"
-              element={userData?.name ? <Dashboard /> : <Login />}
+              element={isLoggedIn ? <Dashboard /> : <Login />}
             />
             <Route
               path="editProfile"
-              element={userData?.name ? <EditProfile /> : <Login />}
+              element={isLoggedIn ? <EditProfile /> : <Login />}
             />
             <Route
               path="addExperience"
-              element={userData?.name ? <AddExperience /> : <Login />}
+              element={isLoggedIn ? <AddExperience /> : <Login />}
             />
             <Route
               path="addEducation"
-              element={userData?.name ? <AddEducation /> : <Login />}
+              element={isLoggedIn ? <AddEducation /> : <Login />}
             />
             <Route
               exact
               path="posts"
-              element={userData?.name ? <Posts /> : <Login />}
+              element={isLoggedIn ? <Posts /> : <Login />}
             />
 
             <Route

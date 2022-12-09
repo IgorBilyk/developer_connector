@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
 const Dashboard = () => {
-  const token = localStorage.getItem("token");
+  const isLoggedIn = useSelector((state) => state);
+  const stateData = useSelector((state) => state.register);
+
+  const token = localStorage.getItem("accessToken");
   const { _id } = JSON.parse(localStorage.getItem("data"));
   const [profileData, setProfileData] = useState(null);
   useEffect(() => {
@@ -17,13 +21,12 @@ const Dashboard = () => {
       })
       .then((res) => setProfileData(res.data));
   }, []);
-
   return (
     <section className="container">
       <h1 className="large text-primary">Dashboard</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Welcome{" "}
-        {profileData && profileData.user.name}
+        {stateData.userInfo && stateData.userInfo.name}
       </p>
       <div className="dash-buttons">
         <Link to="/editProfile" className="btn btn-light">

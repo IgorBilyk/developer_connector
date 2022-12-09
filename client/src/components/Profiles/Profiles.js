@@ -15,7 +15,6 @@ const Profiles = () => {
         },
       })
       .then((res) => setProfiles(res.data));
-      
   }, []);
   return (
     <section className="container">

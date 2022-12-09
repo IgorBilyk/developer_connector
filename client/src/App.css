@@ -81,6 +81,9 @@ img {
 .text-dark {
   color: var(--dark-color);
 }
+.error{
+  color: var(--danger-color);
+}
 
 /* Padding */
 .p {

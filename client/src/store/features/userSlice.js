@@ -13,10 +13,11 @@ const userSlice = createSlice({
     localToken: localStorage.getItem("token") || null,
     loading: false,
     userInfo: null,
+    userData: localStorage.getItem("data") || null,
     loggInError: [],
     errorMessages: [],
     isAuthenticated: false,
-    isLoggedIn: localStorage.getItem("token") ? true : false,
+    isLoggedIn: localStorage.getItem("accessToken") ? true : false,
   },
   reducers: {
     showAlert: (state, action) => {
@@ -30,8 +31,10 @@ const userSlice = createSlice({
     },
     logOut: (state) => {
       state.isLoggedIn = false;
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
       localStorage.removeItem("data");
+      window.location("/");
+      console.log("Logout");
     },
     checkLogin: (state) => {
       if (localStorage.getItem("token")) {
@@ -60,6 +63,7 @@ const userSlice = createSlice({
     [loginUser.pending]: (state, { payload }) => {
       state.loading = true;
       state.loggInError = null;
+
       state.errorMessages.push(payload);
     },
     [loginUser.fulfilled]: (state, { payload }) => {
@@ -68,10 +72,10 @@ const userSlice = createSlice({
       state.loading = false;
       state.isLoggedIn = true;
       state.isAuthenticated = true;
-      state.loggInError = null;
+      state.loggInError = [];
       state.errorMessages = [];
-
-      localStorage.setItem("token", payload.data.accessTok);
+      console.log(payload);
+      localStorage.setItem("accessToken", payload.data.accessTok);
       localStorage.setItem("data", JSON.stringify(payload.data.user));
     },
     [loginUser.rejected]: (state, { payload }) => {

@@ -12,14 +12,10 @@ import "../../App.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const user = useContext(globalStateContext);
   const stateData = useSelector((state) => state.register);
   const { isLoggedIn, userData: data } = stateData;
-  const name = stateData.userInfo.name;
+  const name = stateData.userData.name;
 
-  //const [userData, setUserData] = useState(user);
-  //const { name } = userData;
-  console.log(stateData.userInfo.name);
   return (
     <Fragment>
       {isLoggedIn ? (

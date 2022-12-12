@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { registerUser, loginUser, clearErrors, checkLogin } from "./actions";
+import {
+  registerUser,
+  loginUser,
+  getUser,
+  clearErrors,
+  checkLogin,
+} from "./actions";
 
 const token = localStorage.getItem("token")
   ? localStorage.getItem("token")
@@ -13,7 +19,8 @@ const userSlice = createSlice({
     localToken: localStorage.getItem("token") || null,
     loading: false,
     userInfo: null,
-    userData: localStorage.getItem("data") || null,
+    userData: JSON.parse(localStorage.getItem("data")),
+    profileData: [],
     loggInError: [],
     errorMessages: [],
     isAuthenticated: false,
@@ -69,6 +76,7 @@ const userSlice = createSlice({
     [loginUser.fulfilled]: (state, { payload }) => {
       state.token = payload.data.token;
       state.userInfo = payload.data.user;
+      state.userData.push(payload.data.user);
       state.loading = false;
       state.isLoggedIn = true;
       state.isAuthenticated = true;
@@ -84,8 +92,18 @@ const userSlice = createSlice({
       state.loggInError = payload;
       state.errorMessages.push(payload);
 
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
       localStorage.removeItem("data");
+    },
+
+    [getUser.pending]: (state, { payload }) => {},
+    [getUser.fulfilled]: (state, { payload }) => {
+      state.errorMessages = [];
+      state.profileData = [];
+      state.profileData.push(payload);
+    },
+    [getUser.rejected]: (state, { payload }) => {
+      state.errorMessages = payload;
     },
     [clearErrors.fulfilled]: (state, { payload }) => {
       state.errorMessages = [];

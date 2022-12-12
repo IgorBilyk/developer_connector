@@ -44,8 +44,31 @@ export const loginUser = createAsyncThunk(
         },
       };
       const res = await axios.post("/auth", arg, config);
-      console.log(res);
+
       return res;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+//Get user by id
+export const getUser = createAsyncThunk(
+  "get/user",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${arg.accessToken}`,
+        },
+      };
+      const res = await axios.get(
+        `http://localhost:5000/profile/user/${arg.id}`,
+        arg,
+        config
+      );
+
+      return res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

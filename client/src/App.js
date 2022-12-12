@@ -37,7 +37,6 @@ function App() {
       ? JSON.parse(localStorage.getItem("data"))
       : null
   );
-  console.log(stateData.isLoggedIn);
   return (
     <Router>
       <globalStateContext.Provider value={userData}>

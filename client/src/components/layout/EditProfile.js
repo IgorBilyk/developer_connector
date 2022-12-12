@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "../../store/features/actions";
 import Loading from "./Loading";
 
 const EditProfile = () => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const options = [
     { value: "", text: "* Select Professional Status" },
@@ -20,6 +23,7 @@ const EditProfile = () => {
   const [selected, setSelected] = useState(options[0].value);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(null);
   const [socials, setSocials] = useState({});
   const [success, setSuccess] = useState(false);
   const accessToken = localStorage.getItem("accessToken");
@@ -28,8 +32,7 @@ const EditProfile = () => {
   const id = stateData.userData._id;
 
   const handleStatusChange = (e) => {
-    console.log(e.target.value);
-    setSelected(e.target.value);
+    setSelected(e.target.value, "selected");
   };
   const handleInputsChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -41,29 +44,50 @@ const EditProfile = () => {
     e.preventDefault();
 
     const config = {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      "Content-Type": "application/json",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
     };
     const result = {
+      id,
       social: {
-        youtube: socials.youtube,
-        twitter: socials.twitter,
-        facebook: socials.facebook,
-        linkedin: socials.linkedin,
-        instagram: socials.instagram,
+        youtube: socials.youtube
+          ? socials.youtube
+          : profileData?.social.youtube,
+        twitter: socials.twitter
+          ? socials.twitter
+          : profileData?.social.twitter,
+        facebook: socials.facebook
+          ? socials.facebook
+          : profileData?.social.facebook,
+        linkedin: socials.linkedin
+          ? socials.linkedin
+          : profileData?.social.linkedin,
+        instagram: socials.instagram
+          ? socials.instagram
+          : profileData?.social.instagram,
       },
-      company: inputs.company,
-      location: inputs.location,
-      skills: inputs.skills,
-      githubusername: inputs.githubusername,
-      bio: inputs.bio,
-      status: selected,
-      website: inputs.website,
+      company: inputs.company ? inputs.company : profileData?.company,
+      location: inputs.location ? inputs.location : profileData?.location,
+      skills: inputs.skills ? inputs.skills : profileData?.skills,
+      githubusername: inputs.githubusername
+        ? inputs.githubusername
+        : profileData?.githubusername,
+      bio: inputs.bio ? inputs.bio : profileData?.bio,
+      status: selected ? selected : profileData?.status,
+      website: inputs.website ? inputs.website : profileData?.website,
     };
     console.log(result);
 
     try {
-      await axios.post("http://localhost:5000/", result, config);
+      await axios.post(
+        "http://localhost:5000/",
+
+        result,
+        { headers: config }
+      );
       setInputs({
         company: "",
         location: "",
@@ -81,20 +105,26 @@ const EditProfile = () => {
         instagram: "",
       });
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 1500);
-      console.log("Success");
+      const interval = setTimeout(() => {
+        setSuccess(false);
+        console.log("Success");
+        navigate("/dashboard");
+      }, 1500);
+
+      return () => clearInterval(interval);
     } catch (err) {
       console.log(err);
     }
   };
+  console.log(count);
   useEffect(() => {
+    //Get profile info of current user by id [Redux action]
     dispatch(getUser({ accessToken, id }));
     const interval = setTimeout(() => {
       setLoading(false);
     }, 500);
     return () => clearInterval(interval);
-  }, []);
-
+  }, [count]);
   return (
     <section className="container">
       <h1 className="large text-primary">Create Your Profile</h1>
@@ -112,8 +142,12 @@ const EditProfile = () => {
             <select
               name="status"
               onChange={handleStatusChange}
-              value={selected}
-              defaultValue={options[selected]}
+              /* defaultValue={
+                !loading
+                  ? options.find((item) => item.value == profileData?.status)
+                      .value
+                  : selected
+              } */
               required
             >
               {options.map((option) => (

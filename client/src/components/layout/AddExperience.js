@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addExperience } from "../../store/features/actions";
 
 const AddExperience = () => {
+  const dispatch = useDispatch();
+
+  const [inputs, setInputs] = useState([]);
+  const [checkbox, setCheckbox] = useState(false);
+  const stateData = useSelector((state) => state.register);
+
+  const handleInputs = (e) => {
+    setInputs({ ...inputs, [e.target.name]: e.target.value });
+  };
+  const checkboxHandle = (e) => {
+    setCheckbox((prev) => !prev);
+  };
+  const handleForm = (e) => {
+    e.preventDefault();
+    const data = { ...inputs, id: stateData.token, checkbox };
+    console.log(data);
+  };
   return (
     <section className="container">
       <h1 className="large text-primary">Add An Experience</h1>
@@ -10,28 +29,65 @@ const AddExperience = () => {
         positions that you have had in the past
       </p>
       <small>* = required field</small>
-      <form className="form">
+      <form className="form" onSubmit={handleForm}>
         <div className="form-group">
-          <input type="text" placeholder="* Job Title" name="title" required />
+          <input
+            type="text"
+            placeholder="* Job Title"
+            name="title"
+            onChange={handleInputs}
+            value={inputs.title}
+            required
+          />
         </div>
         <div className="form-group">
-          <input type="text" placeholder="* Company" name="company" required />
+          <input
+            type="text"
+            placeholder="* Company"
+            name="company"
+            onChange={handleInputs}
+            value={inputs.company}
+            required
+          />
         </div>
         <div className="form-group">
-          <input type="text" placeholder="Location" name="location" />
+          <input
+            type="text"
+            placeholder="Location"
+            name="location"
+            value={inputs.location}
+            onChange={handleInputs}
+          />
         </div>
         <div className="form-group">
           <h4>From Date</h4>
-          <input type="date" name="from" />
+          <input
+            type="date"
+            name="from"
+            value={inputs.from}
+            onChange={handleInputs}
+          />
         </div>
         <div className="form-group">
           <p>
-            <input type="checkbox" name="current" value="" /> Current Job
+            <input
+              type="checkbox"
+              name="current"
+              value=""
+              onChange={checkboxHandle}
+            />{" "}
+            Current Job
           </p>
         </div>
         <div className="form-group">
           <h4>To Date</h4>
-          <input type="date" name="to" />
+          <input
+            type="date"
+            name="to"
+            onChange={handleInputs}
+            value={inputs.to}
+            style={{ display: checkbox ? "none" : "block" }}
+          />
         </div>
         <div className="form-group">
           <textarea
@@ -39,6 +95,8 @@ const AddExperience = () => {
             cols="30"
             rows="5"
             placeholder="Job Description"
+            value={inputs.description}
+            onChange={handleInputs}
           ></textarea>
         </div>
         <input type="submit" className="btn btn-primary my-1" />

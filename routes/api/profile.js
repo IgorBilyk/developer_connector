@@ -32,17 +32,18 @@ router.get("/me", auth, async (req, res) => {
 
 router.post(
   "/",
-  
-    [
-      body("status", "The status is required").notEmpty(),
-      body("skills", "Skills are required").notEmpty(),
-    ],
+
+  [
+    body("status", "The status is required").notEmpty(),
+    body("skills", "Skills are required").notEmpty(),
+  ],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     const {
+      id,
       company,
       website,
       location,
@@ -50,13 +51,13 @@ router.post(
       status,
       githubusername,
       skills,
-      social
-     ,
+      social,
     } = req.body;
+    console.log(skills);
     //profile object
-    const{facebook,youtube,twitter,linkedin,instagram} = social
+    const { facebook, youtube, twitter, linkedin, instagram } = social;
     const profileFields = {};
-    profileFields.user = req.user.id;
+    profileFields.user = id;
     if (company) profileFields.company = company;
     if (website) profileFields.website = website;
     if (location) profileFields.location = location;
@@ -64,7 +65,8 @@ router.post(
     if (status) profileFields.status = status;
     if (githubusername) profileFields.githubusername = githubusername;
     if (skills)
-      profileFields.skills = skills.split(",").map((skill) => skill.trim());
+      profileFields.skills =
+        skills /* .split(",").map((skill) => skill.trim()) */;
 
     //build social profile
     profileFields.social = {};
@@ -75,11 +77,10 @@ router.post(
     if (instagram) profileFields.social.instagram = instagram;
 
     try {
-      let profile = await Profile.findOne({ user: req.user.id });
+      let profile = await Profile.findOne({ user: id });
       if (profile) {
-        //Update profile
         profile = await Profile.findOneAndUpdate(
-          { user: req.user.id },
+          { user: id },
           { $set: profileFields },
           { new: true }
         );
@@ -156,7 +157,7 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { title, company, location, from, to, current, description } =
+    const { title, company, location, from, to, current, description,id} =
       req.body;
     const newExperience = {
       title,

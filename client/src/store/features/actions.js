@@ -92,6 +92,24 @@ export const checkLogin = createAsyncThunk(
     }
   }
 );
+// Add/Update user experience
+export const addExperience = createAsyncThunk(
+  "Add/Update/experience",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.post(`/profile/delete/:${arg.id}`, arg, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 export const getAllPosts = createAsyncThunk(
   "get/posts",
   async (arg, { rejectWithValue }) => {

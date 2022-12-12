@@ -6,17 +6,17 @@ import {
   getUser,
   clearErrors,
   checkLogin,
+  addExperience
 } from "./actions";
 
-const token = localStorage.getItem("token")
-  ? localStorage.getItem("token")
+const token = localStorage.getItem("accessToken")
+  ? localStorage.getItem("accessToken")
   : null;
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
     token,
-    localToken: localStorage.getItem("token") || null,
     loading: false,
     userInfo: null,
     userData: JSON.parse(localStorage.getItem("data")),
@@ -59,7 +59,7 @@ const userSlice = createSlice({
     [registerUser.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
-      localStorage.setItem("token", payload.data.token);
+      localStorage.setItem("accessToken", payload.data.token);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.errorMessages = [];
@@ -119,6 +119,20 @@ const userSlice = createSlice({
     [checkLogin.rejected]: (state, { payload }) => {
       console.log(payload);
     },
+    [addExperience.pending]: (state, { payload }) => {
+      state.loading = true;
+      state.errorMessages = [];
+    },
+    [addExperience.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.profileData[0].experience.push(payload)
+    },
+    [addExperience.rejected]: (state, { payload }) => {
+      state.errorMessages = [];
+      state.loading = false;
+      state.errorMessages.push(payload);
+    },
+
   },
 });
 

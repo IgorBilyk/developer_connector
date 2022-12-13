@@ -10,6 +10,31 @@ const User = require("../../models/User");
 const secret_key = config.get("ACCESS_TOKEN");
 
 const auth = require("../../midleware/auth");
+//TEST JWT
+router.post("/test", auth, async (req, res) => {
+  const payload = {
+    id: 12345676,
+  };
+  /*   jwt.sign(payload, secret_key, { expiresIn: 60 * 6000 }, (err, token) => {
+    if (err) throw err;
+    res.json({ accessToken: token });
+  }); */
+
+  const accessToken = jwt.sign(payload, secret_key, { expiresIn: "15m" });
+  const resreshToken = jwt.sign(payload, secret_key);
+
+  res.json({ accessToken, resreshToken });
+
+  /*   const refreshToken = jwt.sign(
+    payload,
+    secret_key,
+    { expiresIn: 60 * 6000 },
+    (err, token) => {
+      if (err) throw err;
+      return token;
+    }
+  ); */
+});
 // route - register user /users
 router.post(
   "/users",

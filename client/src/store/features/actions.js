@@ -44,7 +44,7 @@ export const loginUser = createAsyncThunk(
         },
       };
       const res = await axios.post("/auth", arg, config);
-
+      console.log(res);
       return res;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -102,7 +102,26 @@ export const addExperience = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const res = await axios.post(`/profile/delete/:${arg.id}`, arg, config);
+      const res = await axios.put(`/experience`, arg, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+// Delete an experience
+export const deleteExperience = createAsyncThunk(
+  "delete/experience",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: arg,
+        },
+      };
+      const res = await axios.delete(`/experience/${arg}/`, arg, config);
 
       return res;
     } catch (err) {

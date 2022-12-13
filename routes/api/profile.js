@@ -145,7 +145,7 @@ router.delete("/profile/delete/:user_id", auth, async (req, res) => {
 router.put(
   "/experience",
   [
-    auth,
+    /* auth, */
     [
       body("title", "Title is required").notEmpty(),
       body("company", "Company is required").notEmpty(),
@@ -169,7 +169,7 @@ router.put(
       description,
     };
     try {
-      const profile = await Profile.findOne({ user: req.user.id });
+      const profile = await Profile.findOne({ user: id });
       const { experience } = profile;
       experience.unshift(newExperience);
       await profile.save();
@@ -182,7 +182,7 @@ router.put(
 // DELETE /profile/experience/:exp_id
 //Delete profile experience
 //@access private
-router.delete("/experience/:exp_id", auth, async (req, res) => {
+router.delete("/experience/:exp_id", /* auth, */ async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id });
     const { experience } = profile;

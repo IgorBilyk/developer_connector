@@ -11,13 +11,13 @@ import Alert from "../layout/Alert";
 
 const Register = () => {
   const dispatch = useDispatch();
-  /*   useEffect(() => {
-    dispatch(clearErrors());
-  }, []); */
 
-  const errors = useSelector((state) => state.register.errorMessages);
+  const errors = useSelector(
+    (state) => state.register.errorMessages[0]?.errors
+  );
   const state = useSelector((state) => state.register);
 
+  const [click, setClick] = useState(0);
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
@@ -41,20 +41,28 @@ const Register = () => {
       password2,
     };
     try {
-      dispatch(hideAlert());
       await dispatch(registerUser(newUser));
+      setClick((prev) => ++prev);
+      console.log(click);
     } catch (err) {
       console.log(err);
     }
   };
+  useEffect(() => {
+    setTimeout(() => dispatch(hideAlert()), 2000);
+  }, [click]);
   return (
     <section className="container">
-      {errors.length > 0 ? <Alert /> : ""}
-
       <h1 className="large text-primary">Sign Up</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Create Your Account
       </p>
+      {errors &&
+        errors.map((error) => (
+          <p key={error.msg} className="error-msg">
+            {error.msg}
+          </p>
+        ))}
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input

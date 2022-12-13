@@ -2,12 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 export const Landing = () => {
-  const isLoggedIn = useSelector((state) => state.register);
-  const [userData, setUserData] = useState(
-    localStorage.getItem("data")
-      ? JSON.parse(localStorage.getItem("data"))
-      : null
-  );
+  const userState = useSelector((state) => state?.register);
+
   return (
     <section className="landing">
       <div className="dark-overlay">
@@ -17,7 +13,7 @@ export const Landing = () => {
             Create a developer profile/portfolio, share posts and get help from
             other developers
           </p>
-          {!userData.name ? (
+          {!userState.name ? (
             <div className="buttons">
               <Link to="/register" className="btn btn-primary">
                 Sign up

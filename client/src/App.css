@@ -84,7 +84,10 @@ img {
 .error{
   color: var(--danger-color);
 }
+.error-msg{
+  color: var(--danger-color);
 
+}
 /* Padding */
 .p {
   padding: 0.5rem;

@@ -6,7 +6,8 @@ import {
   getUser,
   clearErrors,
   checkLogin,
-  addExperience
+  addExperience,
+  deleteExperience,
 } from "./actions";
 
 const token = localStorage.getItem("accessToken")
@@ -19,8 +20,9 @@ const userSlice = createSlice({
     token,
     loading: false,
     userInfo: null,
-    userData: JSON.parse(localStorage.getItem("data")),
-    profileData: [],
+    /* userData: JSON.parse(localStorage.getItem("data")), */
+    userData: [],
+    profileData: null,
     loggInError: [],
     errorMessages: [],
     isAuthenticated: false,
@@ -39,6 +41,7 @@ const userSlice = createSlice({
     logOut: (state) => {
       state.isLoggedIn = false;
       localStorage.removeItem("accessToken");
+      state.userData = [];
       localStorage.removeItem("data");
       window.location("/");
       console.log("Logout");
@@ -76,7 +79,7 @@ const userSlice = createSlice({
     [loginUser.fulfilled]: (state, { payload }) => {
       state.token = payload.data.token;
       state.userInfo = payload.data.user;
-      state.userData.push(payload.data.user);
+      state.profileData = payload.data.user;
       state.loading = false;
       state.isLoggedIn = true;
       state.isAuthenticated = true;
@@ -96,8 +99,12 @@ const userSlice = createSlice({
       localStorage.removeItem("data");
     },
 
-    [getUser.pending]: (state, { payload }) => {},
+    [getUser.pending]: (state, { payload }) => {
+      state.loading = true;
+    },
     [getUser.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+
       state.errorMessages = [];
       state.profileData = [];
       state.profileData.push(payload);
@@ -125,14 +132,25 @@ const userSlice = createSlice({
     },
     [addExperience.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.profileData[0].experience.push(payload)
+      state.profileData.push({ experiences: payload });
     },
     [addExperience.rejected]: (state, { payload }) => {
       state.errorMessages = [];
       state.loading = false;
       state.errorMessages.push(payload);
     },
-
+    [deleteExperience.pending]: (state, { payload }) => {
+      state.loading = true;
+      state.errorMessages = [];
+    },
+    [deleteExperience.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+    },
+    [deleteExperience.rejected]: (state, { payload }) => {
+      state.errorMessages = [];
+      state.loading = false;
+      state.errorMessages.push(payload);
+    },
   },
 });
 

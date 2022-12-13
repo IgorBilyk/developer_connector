@@ -28,27 +28,7 @@ const Login = () => {
     }));
   };
   //login User
-  /*  const loginUser = (data) => {
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(data),
-      };
-      fetch("/auth", config)
-        .then((res) => res.json())
-        .then((result) => {
-          console.log(`Success ${result.accessTok}`);
-          localStorage.setItem("accessToken", result.accessTok);
-          localStorage.setItem("data", JSON.stringify(result.user));
-          window.location = "/dashboard";
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  }; */
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -58,7 +38,6 @@ const Login = () => {
     };
 
     dispatch(loginUser(data));
-    // loginUser(data);
   };
 
   return (
@@ -70,8 +49,10 @@ const Login = () => {
         <i className="fas fa-user"></i> Sign into Your Account
       </p>
       {loggInError?.errors
-        ? loggInError.errors.map((error) => (
-            <h4 className="error">{error.msg}</h4>
+        ? loggInError.errors.map((error, indx) => (
+            <h4 className="error" key={indx}>
+              {error.msg}
+            </h4>
           ))
         : ""}
       <form className="form" onSubmit={handleSubmit}>

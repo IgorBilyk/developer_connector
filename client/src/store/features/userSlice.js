@@ -20,6 +20,7 @@ const userSlice = createSlice({
     token,
     loading: false,
     userInfo: null,
+    isLoggedIn: false,
     /* userData: JSON.parse(localStorage.getItem("data")), */
     userData: [],
     profileData: null,
@@ -77,7 +78,6 @@ const userSlice = createSlice({
       state.errorMessages.push(payload);
     },
     [loginUser.fulfilled]: (state, { payload }) => {
-      state.token = payload.data.token;
       state.userInfo = payload.data.user;
       state.profileData = payload.data.user;
       state.loading = false;
@@ -87,13 +87,17 @@ const userSlice = createSlice({
       state.errorMessages = [];
       console.log(payload);
       localStorage.setItem("accessToken", payload.data.accessTok);
+      localStorage.setItem("refreshToken", payload.data.refreshTok);
       localStorage.setItem("data", JSON.stringify(payload.data.user));
     },
     [loginUser.rejected]: (state, { payload }) => {
+      console.log("payload", payload);
       state.errorMessages = [];
+      state.isLoggedIn = false;
+
       state.loading = false;
       state.loggInError = payload;
-      state.errorMessages.push(payload);
+      state.errorMessages.push(payload.data);
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("data");

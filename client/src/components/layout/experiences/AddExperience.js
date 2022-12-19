@@ -19,10 +19,14 @@ const AddExperience = () => {
   };
   const handleForm = (e) => {
     e.preventDefault();
-    const data = { ...inputs, id: stateData.token, current: checkbox };
+    const data = {
+      ...inputs,
+      id: JSON.parse(localStorage.getItem("data"))._id,
+      current: checkbox,
+    };
     if (inputs.from > inputs.to) setError("Please, check validity of to date!");
     dispatch(addExperience(data));
-     setInputs({
+    setInputs({
       title: "",
       company: "",
       location: "",
@@ -30,7 +34,7 @@ const AddExperience = () => {
       to: "",
       description: "",
     });
-    console.log(data, "@Add Experience - Success!");
+    window.location("/dashboard");
   };
   return (
     <section className="container">

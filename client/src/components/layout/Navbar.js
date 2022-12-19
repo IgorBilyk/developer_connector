@@ -13,8 +13,11 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const stateData = useSelector((state) => state.register);
   const { isLoggedIn, userData: data } = stateData;
+  const userData = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   const name = stateData?.userInfo?.name;
   const test = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
     const result = await axios.post(
       "http://localhost:5000/test",
       {},
@@ -22,12 +25,12 @@ const Navbar = () => {
         "Content-Type": "application/json",
 
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2NzYsImlhdCI6MTY3MDk1MzM2NiwiZXhwIjoxNjcwOTU0MjY2fQ.A87ekCCHE06DqI6SqrT1SZx0m_EVBRNqPjnwHCYziPs`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
+    return result.data;
   };
-
   return (
     <Fragment>
       {isLoggedIn ? (
@@ -50,9 +53,14 @@ const Navbar = () => {
             <li>
               <Link to="dashboard">Dashboard</Link>
             </li>
-            <li>
-              <Link to="dashboard">Hey {name}</Link>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <Link to="dashboard">Hey {userData?.name}</Link>
+              </li>
+            ) : (
+              ""
+            )}
+
             <li> | </li>
             <li>
               <Link

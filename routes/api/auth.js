@@ -8,7 +8,7 @@ const auth = require("../../midleware/auth");
 const User = require("../../models/User");
 /* const secret_key = config.get("ACCESS_TOKEN");
 const refresh_key = config.get("REFRESH_TOKEN"); */
-const secret_key = 12;
+const secret_key = "_access_key_jwt";
 const refresh_key = 12323;
 
 // route - get user
@@ -28,29 +28,38 @@ router.get("/auth", auth, async (req, res) => {
 
 //Create access/refresh token
 // route - authenticate user & get token /auth login
-const accessToken = (id) => {
-  /*  const token = jwt.sign(
+const accessToken = (user) => {
+  const payload = {
     id,
+  };
+  const token = jwt.sign(
+    /* JSON.parse(JSON.stringify(payload)), */
+    { id: user },
     secret_key,
     { expiresIn: "15min" },
     (err, token) => {
       if (err) throw err;
       return token;
     }
-  ); */
-  return id;
+  );
+  return token;
 };
-const refreshToken = (id) => {
-  /* const token = jwt.sign(
+const refreshToken = (user) => {
+  const payload = {
     id,
+  };
+  const token = jwt.sign(
+    /*  JSON.parse(JSON.stringify(payload)), */
+    { id: user },
+
     refresh_key,
     { expiresIn: "15d" },
     (err, token) => {
       if (err) throw err;
       return token;
     }
-  ); */
-  return id;
+  );
+  return token;
 };
 
 //Login route
@@ -70,22 +79,24 @@ router.post(
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
-      if (!user)
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Invalid Credentials " }] });
+      if (!user) return res.status(400).json({ msg: "Invalid Credentials " });
 
       const isMatch = await bcrypt.compare(`${password}`, user.password);
       if (!isMatch)
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Invalid Credentials " }] });
+        return res.status(400).json({ msg: "Invalid Credentials " });
 
-      const accessTok = accessToken(user._id);
-      const refreshTok = refreshToken(user._id);
-      res.cookie("token", refreshTok, { httpOnly: true });
+      /*  const accessTok = accessToken(user);
+      const refreshTok = refreshToken(user); */
 
-      res.json({ accessTok, refreshTok, user });
+      const accessTok = jwt.sign({ user: user._id }, secret_key, {
+        expiresIn: "14m",
+      });
+      const refreshTok = jwt.sign({ user: user._id }, secret_key, {
+        expiresIn: "15d",
+      });
+      console.log(accessTok, refreshTok);
+
+      res.json({ user, accessTok, refreshTok });
     } catch (error) {
       console.log(error.message, "error");
       res.status(500).send("Server Error");

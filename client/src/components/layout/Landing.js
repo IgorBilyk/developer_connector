@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 export const Landing = () => {
-  const userState = useSelector((state) => state?.register);
+  const stateData = useSelector((state) => state?.register);
+  const { isLoggedIn, userData: data } = stateData;
 
   return (
     <section className="landing">
@@ -13,7 +14,7 @@ export const Landing = () => {
             Create a developer profile/portfolio, share posts and get help from
             other developers
           </p>
-          {!userState.name ? (
+          {!isLoggedIn ? (
             <div className="buttons">
               <Link to="/register" className="btn btn-primary">
                 Sign up

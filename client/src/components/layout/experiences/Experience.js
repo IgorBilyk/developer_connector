@@ -2,16 +2,19 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { deleteExperience } from "../../../store/features/actions";
 
-export const Experience = ({ data }) => {
+export const Experience = ({ data, handleClick }) => {
   const dispatch = useDispatch();
   const { _id, company, title, location, from, to, current, description } =
     data;
 
   /*   console.log(from.slice(0, 10)); */
-  const handleDeleteExperience = () => {
+  const handleDeleteExperience = (e) => {
+    e.preventDefault();
+
     dispatch(deleteExperience(_id));
-    console.log("deleted", _id);
+    setTimeout(() => handleClick(), 1000);
   };
+
   return (
     <tr>
       <td>{company}</td>

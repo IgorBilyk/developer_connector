@@ -42,20 +42,12 @@ function App() {
       ? JSON.parse(localStorage.getItem("data"))
       : null
   );
-  console.log(stateData);
   return (
     <Router>
       <globalStateContext.Provider value={userData}>
         <Fragment>
           <Navbar />
-          <Link
-            onClick={() => {
-              dispatch(logOut());
-              window.location("/");
-            }}
-          >
-            logout
-          </Link>
+
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route exact path="register" element={<Register />} />

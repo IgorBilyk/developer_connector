@@ -10,6 +10,31 @@ const User = require("../../models/User");
 const secret_key = config.get("ACCESS_TOKEN");
 
 const auth = require("../../midleware/auth");
+//Test refresh token
+router.get("/refreshToken", (req, res) => {
+  
+  /*  const accessToken = req.headers.authorization.split(" ")[1];
+
+
+  if (!accessToken)
+    return res.status(401).json({ msg: "No Token, authorization denied" }); */
+  /*  try {
+    const decoded = jwt.verify(
+      accessToken,
+      "_access_key_jwt",
+      (err, decoded) => {
+        if (err) {
+          console.log("token validation error", err);
+        }
+        res.semd(decoded);
+      }
+    );
+    res.json({ decoded });
+  } catch (error) {
+    res.status(401).json({ error: "Token error" });
+  } */
+  res.json({ result: "Success" });
+});
 //TEST JWT
 router.post("/test", auth, async (req, res) => {
   const payload = {
@@ -20,7 +45,7 @@ router.post("/test", auth, async (req, res) => {
     res.json({ accessToken: token });
   }); */
 
-  const accessToken = jwt.sign(payload, secret_key, { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, secret_key, { expiresIn: "10s" });
   const resreshToken = jwt.sign(payload, secret_key);
 
   res.json({ accessToken, resreshToken });

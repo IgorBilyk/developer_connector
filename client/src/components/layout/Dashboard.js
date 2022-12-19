@@ -7,25 +7,32 @@ import { Experiences } from "./experiences/Experiences";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+  const [clicked, setClicked] = useState(false);
   //Get data from profile redux store
   const profileData = useSelector((state) => state.register);
-
-  const token = localStorage.getItem("accessToken");
-  const { _id } = JSON.parse(localStorage.getItem("data"));
-  const [loading, setLoading] = useState(true);
+  const { isLoggedIn } = profileData;
+  const { _id } = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   useEffect(() => {
     dispatch(getUser({ accessToken: token, id: _id }));
     const interval = setTimeout(() => setLoading(false), 500);
     return () => clearInterval(interval);
-  }, []);
+  }, [clicked]);
+
+  const token = localStorage.getItem("accessToken");
+  const userData = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
+
   const name = profileData?.userData.name;
-  console.log(loading);
+  const handleClick = () => {
+    setClicked(prev => !prev)
+    console.log(clicked)
+  }
   return (
     <section className="container">
       <h1 className="large text-primary">Dashboard</h1>
 
       <p className="lead">
-        Welcome<i className="fas fa-user"> {name}</i>{" "}
+        Welcome<i className="fas fa-user"> {userData.name}</i>{" "}
       </p>
       <div className="dash-buttons">
         <Link to="/editProfile" className="btn btn-light">
@@ -52,7 +59,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            <Experiences />
+            <Experiences handleClick={handleClick}/>
           </tbody>
         </table>
       )}

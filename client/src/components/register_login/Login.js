@@ -39,22 +39,17 @@ const Login = () => {
 
     dispatch(loginUser(data));
   };
-
   return (
     <section className="container">
-      {/*       {errors.length > 0 ? <Alert /> : ""}
-       */}{" "}
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Sign into Your Account
       </p>
-      {loggInError?.errors
-        ? loggInError.errors.map((error, indx) => (
-            <h4 className="error" key={indx}>
-              {error.msg}
-            </h4>
-          ))
-        : ""}
+      {/* {loggInError.data.msg && (
+        <h4 className="error" key={1}>
+          {loggInError.data}
+        </h4>
+      )} */}
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input

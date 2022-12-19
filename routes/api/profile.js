@@ -184,7 +184,7 @@ router.put(
 //@access private
 router.delete("/experience/:exp_id", /* auth, */ async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id });
+    const profile = await Profile.findOne({ user: "635ab0209953e7ce7b6d6d3e"});
     const { experience } = profile;
     const removedIndx = experience
       .map((item) => item.id)

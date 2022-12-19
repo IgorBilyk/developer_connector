@@ -43,11 +43,12 @@ export const loginUser = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const res = await axios.post("/auth", arg, config);
-      console.log(res);
+      console.log("init  login");
+      const res = await axios.post("http://localhost:5000/auth", arg, config);
+      console.log("res from actions", res.data);
       return res;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response);
     }
   }
 );
@@ -118,14 +119,14 @@ export const deleteExperience = createAsyncThunk(
       const config = {
         headers: {
           "Content-Type": "application/json",
-          Authorization: arg,
         },
       };
+      console.log(arg);
       const res = await axios.delete(`/experience/${arg}/`, arg, config);
 
       return res;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue("server", err.response.data);
     }
   }
 );

@@ -14,25 +14,32 @@ import Comments from "./Comments";
 
 const IndividualPost = () => {
   const [post, setPost] = useState();
-  const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const token = localStorage.getItem("token");
+  const [click, setClick] = useState(true);
+  const refreshToken = localStorage.getItem("refreshToken");
+  const handleClick = () => {
+    setClick((prev) => !prev);
+    console.log(click);
+  };
 
   const { id } = useParams();
+  const time = post.date.slice(11, 16);
 
   useEffect(() => {
     axios
       .get(`http://localhost:5000/post/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${refreshToken}`,
         },
       })
       .then((res) => {
         setPost(res.data);
-        setTimeout(() => setIsLoading(false), loadingTime);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, loadingTime);
       });
-  }, []);
+  }, [click]);
 
   return (
     <section className="container mt-5">
@@ -51,7 +58,7 @@ const IndividualPost = () => {
             <div>
               <p className="my-1">{post.text}</p>
               <p className="post-date">
-                Posted on {post.date.substring(0, 10)}
+                Posted on | {post.date.substring(0, 10)} : {time}
               </p>
             </div>
             <div>
@@ -60,7 +67,14 @@ const IndividualPost = () => {
               </Link>
             </div>
           </div>
-          <Comments comments={post.comments} name={post.name} id={post._id} />
+          <Comments
+            comments={post.comments}
+            name={post.name}
+            avatar={post.avatar}
+            userId={post.user}
+            id={post._id}
+            handleClick={handleClick}
+          />
         </>
       ) : (
         <div className="loading-container">

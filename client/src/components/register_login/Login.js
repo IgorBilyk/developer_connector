@@ -11,14 +11,12 @@ import Alert from "../layout/Alert";
 const Login = () => {
   //redux state initialization
   const dispatch = useDispatch();
-  const stateData = useSelector((state) => state.register);
-  const { loggInError } = stateData;
+  let errors = useSelector((state) => state.register.errorMessages[0]?.data);
 
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
   });
-
   const { email, password } = inputs;
 
   const handleChange = (e) => {
@@ -39,17 +37,18 @@ const Login = () => {
 
     dispatch(loginUser(data));
   };
-  return (
+/*   console.log(errors.msg);
+ */  return (
     <section className="container">
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Sign into Your Account
       </p>
-      {/* {loggInError.data.msg && (
-        <h4 className="error" key={1}>
-          {loggInError.data}
-        </h4>
-      )} */}
+      {errors && (
+        <p key={errors.msg} className="error-msg">
+          {errors?.msg}
+        </p>
+      )}
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <input

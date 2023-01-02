@@ -5,8 +5,13 @@ const dashboardSlice = createSlice({
   initialState: {
     loading: false,
     posts: [],
+    click: false,
   },
-  reducers: {},
+  reducers: {
+    updateDashboard: (state, action) => {
+      state.click = !state.click;
+    },
+  },
   extraReducers: {
     [getAllPosts.pending]: (state, { payload }) => {
       state.loading = true;
@@ -19,3 +24,4 @@ const dashboardSlice = createSlice({
   },
 });
 export default dashboardSlice;
+export const { updateDashboard } = dashboardSlice.actions;

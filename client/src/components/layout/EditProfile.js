@@ -26,11 +26,11 @@ const EditProfile = () => {
   const [count, setCount] = useState(null);
   const [socials, setSocials] = useState({});
   const [success, setSuccess] = useState(false);
-  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
   const stateData = useSelector((state) => state.register);
   const profileData = useSelector((state) => state.register.profileData[0]);
-  const id = stateData.userData._id;
-
+  const id = profileData.user._id;
+  console.log(profileData);
   const handleStatusChange = (e) => {
     setSelected(e.target.value, "selected");
   };
@@ -45,13 +45,13 @@ const EditProfile = () => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${refreshToken}`,
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     };
     const result = {
-      id,
+      user: id,
       social: {
         youtube: socials.youtube
           ? socials.youtube
@@ -119,7 +119,7 @@ const EditProfile = () => {
   console.log(count);
   useEffect(() => {
     //Get profile info of current user by id [Redux action]
-    dispatch(getUser({ accessToken, id }));
+    dispatch(getUser({ refreshToken, id }));
     const interval = setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -234,6 +234,7 @@ const EditProfile = () => {
               onChange={handleInputsChange}
               value={inputs.bio}
               defaultValue={!loading ? profileData?.bio : null}
+              style={{ overflow: "auto", resize: "none" }}
             ></textarea>
             <small className="form-text">Tell us a little about yourself</small>
           </div>

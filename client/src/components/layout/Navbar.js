@@ -29,6 +29,7 @@ const Navbar = () => {
         },
       }
     );
+    localStorage.setItem("accessToken", result.data.accessToken);
     return result.data;
   };
   return (

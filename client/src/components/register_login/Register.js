@@ -17,7 +17,7 @@ const Register = () => {
   );
   const state = useSelector((state) => state.register);
 
-  const [click, setClick] = useState(0);
+  const [click, setClick] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
@@ -41,9 +41,8 @@ const Register = () => {
       password2,
     };
     try {
-      await dispatch(registerUser(newUser));
-      setClick((prev) => ++prev);
-      console.log(click);
+       dispatch(registerUser(newUser));
+      setClick((prev) => !prev);
     } catch (err) {
       console.log(err);
     }
@@ -51,6 +50,7 @@ const Register = () => {
   useEffect(() => {
     setTimeout(() => dispatch(hideAlert()), 2000);
   }, [click]);
+  
   return (
     <section className="container">
       <h1 className="large text-primary">Sign Up</h1>
@@ -71,6 +71,7 @@ const Register = () => {
             name="name"
             onChange={handleChange}
             value={name}
+            required
           />
         </div>
         <div className="form-group">
@@ -80,6 +81,7 @@ const Register = () => {
             name="email"
             value={email}
             onChange={handleChange}
+            required
           />
           <small className="form-text">
             This site uses Gravatar so if you want a profile image, use a
@@ -93,6 +95,7 @@ const Register = () => {
             name="password"
             value={password}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="form-group">
@@ -102,6 +105,7 @@ const Register = () => {
             name="password2"
             value={password2}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -120,7 +124,3 @@ const Register = () => {
   );
 };
 export default Register;
-
-
-
-

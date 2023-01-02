@@ -12,7 +12,6 @@ const secret_key = config.get("ACCESS_TOKEN");
 const auth = require("../../midleware/auth");
 //Test refresh token
 router.get("/refreshToken", (req, res) => {
-  
   /*  const accessToken = req.headers.authorization.split(" ")[1];
 
 
@@ -37,16 +36,19 @@ router.get("/refreshToken", (req, res) => {
 });
 //TEST JWT
 router.post("/test", auth, async (req, res) => {
-  const payload = {
-    id: 12345676,
+  /*   console.log(user_id._id);
+   */ const payload = {
+    id: "635ab0209953e7ce7b6d6d3e",
   };
   /*   jwt.sign(payload, secret_key, { expiresIn: 60 * 6000 }, (err, token) => {
     if (err) throw err;
     res.json({ accessToken: token });
   }); */
 
-  const accessToken = jwt.sign(payload, secret_key, { expiresIn: "10s" });
-  const resreshToken = jwt.sign(payload, secret_key);
+  const accessToken = jwt.sign(payload, "_access_key_jwt", {
+    expiresIn: "10s",
+  });
+  const resreshToken = jwt.sign(payload, "_access_key_jwt");
 
   res.json({ accessToken, resreshToken });
 
@@ -119,6 +121,7 @@ router.post(
         if (err) throw err;
         res.json({ token });
       }); */
+      res.json({ user });
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Server Error");

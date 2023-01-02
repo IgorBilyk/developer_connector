@@ -121,8 +121,63 @@ export const deleteExperience = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      console.log(arg);
       const res = await axios.delete(`/experience/${arg}/`, arg, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("server", err.response.data);
+    }
+  }
+);
+// Add/Update user education
+export const addEducation = createAsyncThunk(
+  "Add/Update/education",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const res = await axios.put(`/education`, arg, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+// Delete education
+export const deleteEducation = createAsyncThunk(
+  "delete/education",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(arg);
+      const res = await axios.delete(`/education/${arg}/`, arg, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue("server", err.response.data);
+    }
+  }
+);
+// Delete User profile
+export const deleteUserProfile = createAsyncThunk(
+  "delete/user-profile",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(arg);
+      const res = await axios.delete(`"/profile/user/635ab0209953e7ce7b6d6d3e`, arg, config);
 
       return res;
     } catch (err) {

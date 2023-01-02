@@ -38,11 +38,19 @@ img {
 .container {
   max-width: 1100px;
   margin: auto;
+  padding: 5rem 0;
   overflow: hidden;
-  padding: 4rem 2rem;
-  margin-bottom: 3rem;
 }
+.container-comments{
+  padding: 1rem;
+  border: 1px solid grey;
+}
+/* .container-comments div{
+  display: flex;
 
+  flex-shrink: 0
+
+} */
 /* Text Styles*/
 .x-large {
   font-size: 4rem;
@@ -308,10 +316,10 @@ background-color: rgba(231, 95, 95, 0.534) !important;
 animation: fadeIn 0.5s, fadeOut 0.5s 1.5;
 -webkit-animation: fadeIn 0.7s, fadeOut 0.5s 3.1s;
 }
-/* .danger-animation{
-animation: fadeIn 0.5s, fadeOut 0.5s 1.5;
--webkit-animation: fadeIn 0.7s, fadeOut 0.5s 3.1s;
-} */
+.popup{
+  position: fixed;
+  top: 10rem;
+}
 @keyframes fadeIn{
   from{opacity: 0; visibility: hidden;}
   to{opacity:1; visibility: visible;}

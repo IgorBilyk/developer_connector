@@ -6,40 +6,55 @@ import { Provider } from "react-redux";
 import axios from "axios";
 import store from "./store/store";
 
+/* const refreshToken = localStorage.getItem("refreshToken");
+ */ /* const accessToken = localStorage.getItem("accessToken");
 axios.interceptors.request.use(
   function (config) {
-    config.headers.Authorization = `Bearer ${localStorage.getItem(
-      "accessToken"
-    )}`;
-    config.headers["Content-Type"] = "application/json";
-    config.headers["userId"] = JSON.parse(localStorage.getItem("data"))._id;
-    console.log("request", JSON.parse(localStorage.getItem("data"))._id);
+    console.log("request", accessToken);
 
-    return config;
+     return config;
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );
-axios.interceptors.response.use(
+ */
+/* axios.interceptors.response.use(
   function (response) {
-    console.log("response", response);
-    return response;
+     return response;
   },
   async (error) => {
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const access_token = localStorage.getItem("refreshToken");
-      axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+      try {
+        await axios
+          .post(
+            "http://localhost:5000/test",
+            {},
+            {
+              "Content-Type": "application/json",
 
-      console.log(error);
-      return axios.request(error.config);
+              headers: {
+                Authorization: `Bearer ${refreshToken}`,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              localStorage.setItem("accessToken", res.data.accessToken);
+              console.log("token set", res.data.accessToken);
+            }
+          });
+        console.log("returned request");
+        return axios(originalRequest);
+      } catch (error) {
+        return Promise.reject(error);
+      }
     }
     return Promise.reject(error);
   }
-);
+); */
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { addExperience } from "../../../store/features/actions";
+import { Link, useNavigate } from "react-router-dom";
 
+import { useSelector, useDispatch } from "react-redux";
+
+import { addExperience } from "../../../store/features/actions";
+import { updateDashboard } from "../../../store/features/dashboardSlice";
 const AddExperience = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [inputs, setInputs] = useState([]);
   const [checkbox, setCheckbox] = useState(false);
@@ -34,7 +37,7 @@ const AddExperience = () => {
       to: "",
       description: "",
     });
-    window.location("/dashboard");
+    setTimeout(() => navigate("/dashboard"), 1000);
   };
   return (
     <section className="container">
@@ -75,12 +78,13 @@ const AddExperience = () => {
           />
         </div>
         <div className="form-group">
-          <h4>From Date</h4>
+          <h4>From Date*</h4>
           <input
             type="date"
             name="from"
             value={inputs.from}
             onChange={handleInputs}
+            required
           />
         </div>
         <div className="form-group">

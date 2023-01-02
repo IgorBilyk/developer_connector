@@ -23,7 +23,7 @@ const Profile = ({ profile }) => {
         <h2>{name}</h2>
         <h4>{status}</h4>
         <p>{location}</p>
-        <a href="profile.html" className="btn btn-primary">
+        <a href="#" className="btn btn-primary">
           View Profile
         </a>
       </div>

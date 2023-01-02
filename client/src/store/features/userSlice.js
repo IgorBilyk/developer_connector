@@ -8,6 +8,7 @@ import {
   checkLogin,
   addExperience,
   deleteExperience,
+  addEducation
 } from "./actions";
 
 const token = localStorage.getItem("accessToken")
@@ -63,7 +64,7 @@ const userSlice = createSlice({
     [registerUser.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
-      localStorage.setItem("accessToken", payload.data.token);
+      localStorage.setItem("accessToken", payload);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.errorMessages = [];
@@ -91,14 +92,11 @@ const userSlice = createSlice({
       localStorage.setItem("data", JSON.stringify(payload.data.user));
     },
     [loginUser.rejected]: (state, { payload }) => {
-      console.log("payload", payload);
       state.errorMessages = [];
       state.isLoggedIn = false;
-
       state.loading = false;
       state.loggInError = payload;
-      state.errorMessages.push(payload.data);
-
+      state.errorMessages.push(payload);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("data");
     },
@@ -151,6 +149,19 @@ const userSlice = createSlice({
       state.loading = false;
     },
     [deleteExperience.rejected]: (state, { payload }) => {
+      state.errorMessages = [];
+      state.loading = false;
+      state.errorMessages.push(payload);
+    },
+    [addEducation.pending]: (state, { payload }) => {
+      state.loading = true;
+      state.errorMessages = [];
+    },
+    [addEducation.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.profileData.push({ education: payload });
+    },
+    [addEducation.rejected]: (state, { payload }) => {
       state.errorMessages = [];
       state.loading = false;
       state.errorMessages.push(payload);

@@ -2,34 +2,50 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "../../store/features/actions";
+import { updateDashboard } from "../../store/features/dashboardSlice";
+
 import Loading from "./Loading";
 import { Experiences } from "./experiences/Experiences";
+import { Educations } from "./educations/Educations";
+import { DashboardHeader } from "./DashboardHeader";
+import { Popup } from "./Popup";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState(false);
+  const [popup, setPopup] = useState(false);
+
   //Get data from profile redux store
   const profileData = useSelector((state) => state.register);
+  const postsState = useSelector((state) => state.posts.click);
   const { isLoggedIn } = profileData;
   const { _id } = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   useEffect(() => {
     dispatch(getUser({ accessToken: token, id: _id }));
-    const interval = setTimeout(() => setLoading(false), 500);
+
+    dispatch(updateDashboard());
+    const interval = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     return () => clearInterval(interval);
   }, [clicked]);
 
   const token = localStorage.getItem("accessToken");
   const userData = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
 
-  const name = profileData?.userData.name;
   const handleClick = () => {
-    setClicked(prev => !prev)
-    console.log(clicked)
-  }
+    setClicked((prev) => !prev);
+  };
+  //handle popup window
+  const handlePopup = () => {
+    setPopup((prev) => !prev);
+  };
   return (
     <section className="container">
       <h1 className="large text-primary">Dashboard</h1>
+      {popup && <Popup />}
 
       <p className="lead">
         Welcome<i className="fas fa-user"> {userData.name}</i>{" "}
@@ -46,46 +62,43 @@ const Dashboard = () => {
         </Link>
       </div>
       <h2 className="my-2">Experience Credentials</h2>
+
       {loading ? (
         <Loading />
       ) : (
         <table className="table">
-          <thead>
+          {!loading && profileData.profileData[0]?.experience.length > 0 ? (
+            <DashboardHeader company={true} />
+          ) : (
             <tr>
-              <th>Company</th>
-              <th className="hide-sm">Title</th>
-              <th className="hide-sm">Years</th>
-              <th></th>
+              <th>No Experiences found!</th>
             </tr>
-          </thead>
+          )}
           <tbody>
-            <Experiences handleClick={handleClick}/>
+            <Experiences handleClick={handleClick} />
           </tbody>
         </table>
       )}
       <h2 className="my-2">Education Credentials</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>School</th>
-            <th className="hide-sm">Degree</th>
-            <th className="hide-sm">Years</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Northern Essex</td>
-            <td className="hide-sm">Associates</td>
-            <td className="hide-sm">02-03-2007 - 01-02-2009</td>
-            <td>
-              <button className="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      {loading ? (
+        <Loading />
+      ) : (
+        <table className="table">
+          {!loading && profileData.profileData[0].education.length > 0 ? (
+            <DashboardHeader company={false} />
+          ) : (
+            <tr>
+              <th>No Education found!</th>
+            </tr>
+          )}
+          <tbody>
+            <Educations handleClick={handleClick} />
+          </tbody>
+        </table>
+      )}
+
       <div className="my-2">
-        <button className="btn btn-danger">
+        <button className="btn btn-danger" onClick={handlePopup}>
           <i className="fas fa-user-minus"></i>
           Delete My Account
         </button>

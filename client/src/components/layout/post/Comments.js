@@ -1,33 +1,46 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+
 import axios from "axios";
 
 import "../../../App.css";
 
 import Comment from "./Comment";
 
-const Comments = ({ comments, name, id }) => {
-  console.log(id);
+import { loadingTime } from "../../../config";
+
+const Comments = ({ comments, name, id, userId, avatar, handleClick }) => {
+  const profileData = useSelector((state) => state.register);
+
   const [active, setActive] = useState(false);
-  const [comment, setComment] = useState(null);
-  const token = localStorage.getItem("token");
+  const [comment, setComment] = useState("");
+  const refreshToken = localStorage.getItem("refreshToken");
+  const userData = JSON.parse(localStorage.getItem("data"));
+  const { userAvatar = avatar, userName = name } = userData;
   const handleCommentBox = () => {
     setActive(!active);
   };
+  //Handle input change
   const handleTextarea = (e) => {
     const value = e.target.value;
-    if (!value.trim()) return false;
     setComment(value);
   };
+  //Submit form with comment
   const handlePostForm = (e) => {
     e.preventDefault();
-    axios.post(`http://localhost:5000/post/comments/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
+    axios.patch(
+      `http://localhost:5000/post/comments/${id}`,
+      { comment, userName, userAvatar },
+      {
+        headers: {
+          "Content-Type": "application/json",
 
-        Authorization: `Bearer ${token}`,
-      },
-      data: { comment },
-    });
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      }
+    );
+    setComment("");
+    setTimeout(() => handleClick(), loadingTime);
   };
   return (
     <div className="post-form">
@@ -46,15 +59,36 @@ const Comments = ({ comments, name, id }) => {
           rows="5"
           placeholder="Comment on this post"
           required
+          value={comment}
           onChange={handleTextarea}
+          style={{ overflow: "auto", resize: "none" }}
         ></textarea>
         <input type="submit" className="btn btn-dark my-1" value="Submit" />
       </form>
-      {comments.length > 0 ? (
-        <Comment comments={comments} name={name} id={id} />
-      ) : (
-        "No comments"
-      )}
+      <div className="container-comments">
+        Comments:
+        {comments.length > 0 ? (
+          comments.map((comment) => {
+            return (
+              <Comment
+                comment={comment}
+                key={comment._id}
+                text={comment.text}
+                postId={id}
+                id={comment._id}
+                name={comment.name}
+                avatar={comment.avatar}
+                handleClick={handleClick}
+              />
+            );
+          })
+        ) : (
+          <h5>
+            This post has't any comment yet! Feel free to leave the first one
+            &#128515;
+          </h5>
+        )}
+      </div>
     </div>
   );
 };

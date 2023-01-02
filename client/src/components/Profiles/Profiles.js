@@ -4,17 +4,17 @@ import Profile from "./Profile";
 import Loading from "../layout/Loading";
 
 const Profiles = () => {
-  const accessToken = localStorage.getItem("accessToken");
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  let refreshToken = localStorage.getItem("refreshToken");
   useEffect(() => {
     axios
       .get("http://localhost:5000/profiles", {
         headers: {
           "Content-Type": "application/json",
 
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${refreshToken}`,
         },
       })
       .then((res) => {

@@ -11,8 +11,8 @@ import Login from "./components/register_login/Login";
 import Dashboard from "./components/layout/Dashboard";
 import EditProfile from "./components/layout/EditProfile";
 import AddExperience from "./components/layout/experiences/AddExperience";
-import AddEducation from "./components/layout/AddEducation";
-import Posts from "./components/layout/Posts";
+import AddEducation from "./components/layout/educations/AddEducation";
+import Posts from "./components/layout/post/Posts";
 import Post from "./components/layout/post/Post";
 import Profiles from "./components/Profiles/Profiles";
 import { Landing } from "./components/layout/Landing";
@@ -82,7 +82,7 @@ function App() {
             />
             <Route
               path="post/:id"
-              element={userData?.name ? <IndividualPost /> : <Login />}
+              element={isLoggedIn ? <IndividualPost /> : <Login />}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -28,8 +28,10 @@ const EditProfile = () => {
   const [success, setSuccess] = useState(false);
   const refreshToken = localStorage.getItem("refreshToken");
   const stateData = useSelector((state) => state.register);
-  const profileData = useSelector((state) => state.register.profileData[0]);
-  const id = profileData.user._id;
+  const profileData = useSelector((state) => state.register?.profileData);
+  //const id = profileData?.user._id;
+
+  const id = JSON.parse(localStorage.getItem("data"))._id;
   console.log(profileData);
   const handleStatusChange = (e) => {
     setSelected(e.target.value, "selected");
@@ -116,10 +118,13 @@ const EditProfile = () => {
       console.log(err);
     }
   };
-  console.log(count);
   useEffect(() => {
     //Get profile info of current user by id [Redux action]
-    dispatch(getUser({ refreshToken, id }));
+    if (profileData == null) {
+      console.log(profileData);
+    } else {
+      dispatch(getUser({ refreshToken, id }));
+    }
     const interval = setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -139,17 +144,7 @@ const EditProfile = () => {
         <form className="form" onSubmit={submitForm}>
           <small>* required field</small>
           <div className="form-group">
-            <select
-              name="status"
-              onChange={handleStatusChange}
-              /* defaultValue={
-                !loading
-                  ? options.find((item) => item.value == profileData?.status)
-                      .value
-                  : selected
-              } */
-              required
-            >
+            <select name="status" onChange={handleStatusChange} required>
               {options.map((option) => (
                 <option value={option.value} key={option.value}>
                   {option.text}

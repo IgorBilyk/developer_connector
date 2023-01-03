@@ -22,7 +22,7 @@ const Dashboard = () => {
   const { isLoggedIn } = profileData;
   const { _id } = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   useEffect(() => {
-    dispatch(getUser({ accessToken: token, id: _id }));
+    /* dispatch(getUser({ accessToken: token, id: _id })); */
 
     dispatch(updateDashboard());
     const interval = setTimeout(() => {
@@ -39,13 +39,20 @@ const Dashboard = () => {
     setClicked((prev) => !prev);
   };
   //handle popup window
-  const handlePopup = () => {
-    setPopup((prev) => !prev);
+  const showPopup = (e) => {
+    setPopup((prev) => (prev = true));
   };
+  //close popup window
+  const closePopup = (e) => {
+    // e.stopImmediatePropagation();
+
+    setPopup((prev) => (prev = false));
+  };
+  console.log(profileData);
   return (
     <section className="container">
       <h1 className="large text-primary">Dashboard</h1>
-      {popup && <Popup />}
+      {popup && <Popup active={popup} closePopup={closePopup} />}
 
       <p className="lead">
         Welcome<i className="fas fa-user"> {userData.name}</i>{" "}
@@ -63,11 +70,11 @@ const Dashboard = () => {
       </div>
       <h2 className="my-2">Experience Credentials</h2>
 
-      {loading ? (
+      {/*     {loading ? (
         <Loading />
       ) : (
         <table className="table">
-          {!loading && profileData.profileData[0]?.experience.length > 0 ? (
+          {!loading && profileData?.profileData[0].experience.length > 0 ? (
             <DashboardHeader company={true} />
           ) : (
             <tr>
@@ -95,10 +102,10 @@ const Dashboard = () => {
             <Educations handleClick={handleClick} />
           </tbody>
         </table>
-      )}
+      )} */}
 
       <div className="my-2">
-        <button className="btn btn-danger" onClick={handlePopup}>
+        <button className="btn btn-danger" onClick={showPopup}>
           <i className="fas fa-user-minus"></i>
           Delete My Account
         </button>

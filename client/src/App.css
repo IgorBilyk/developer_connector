@@ -316,10 +316,76 @@ background-color: rgba(231, 95, 95, 0.534) !important;
 animation: fadeIn 0.5s, fadeOut 0.5s 1.5;
 -webkit-animation: fadeIn 0.7s, fadeOut 0.5s 3.1s;
 }
-.popup{
-  position: fixed;
-  top: 10rem;
+/*Popup window styles*/
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
+
+/* Modal Content/Box */
+.modal-content {
+  position: relative;
+  z-index: 10;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.show-popup{
+  display: block;
+}
+.buttons{
+  display: flex;
+  justify-content: center;
+}
+.buttons button{
+  border: none;
+  outline: none;
+  color: #fff;
+  background-color: #616364;
+  padding: .7rem;
+  margin: 3rem;
+  transition: all .5s ease;
+  -webkit-transition: all .5s ease;
+  -moz-transition: all .5s ease;
+  -ms-transition: all .5s ease;
+  -o-transition: all .5s ease;
+}
+.buttons > .delete {
+  background: var(--danger-color);
+
+}
+.buttons button:hover{
+  cursor: pointer;
+  opacity: 0.7;
+}
+
 @keyframes fadeIn{
   from{opacity: 0; visibility: hidden;}
   to{opacity:1; visibility: visible;}

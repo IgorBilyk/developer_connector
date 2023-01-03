@@ -171,14 +171,15 @@ export const deleteUserProfile = createAsyncThunk(
   "delete/user-profile",
   async (arg, { rejectWithValue }) => {
     try {
-      const config = {
+      /*  const config = {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${arg.refreshToken}`,
         },
       };
-      console.log(arg);
-      const res = await axios.delete(`"/profile/user/635ab0209953e7ce7b6d6d3e`, arg, config);
-
+ */
+      console.log(arg, "from actions delete user");
+      const res = await axios.delete(`/profile/delete/${arg.user_id}`, arg);
       return res;
     } catch (err) {
       return rejectWithValue("server", err.response.data);

@@ -130,15 +130,19 @@ router.get("/profile/user/:user_id", async (req, res) => {
 });
 // delete user profile
 // @access private
-router.delete("/profile/delete/:user_id", auth, async (req, res) => {
-  try {
-    await Profile.findOneAndDelete({ user: req.params.user_id });
-    await User.findOneAndDelete({ _id: req.params.user_id });
-    res.json({ msg: "user removed" });
-  } catch (err) {
-    res.status(500).send(`Server error : ${err.message}`);
+router.delete(
+  "/profile/delete/:user_id",
+  /*  auth, */ async (req, res) => {
+    try {
+      console.log(req.params.user_id, "from profile servers");
+      await Profile.findOneAndDelete({ user: req.params.user_id });
+      await User.findOneAndDelete({ _id: req.params.user_id });
+      res.json({ msg: "User has been removed." });
+    } catch (err) {
+      res.status(500).send(`Server error : ${err.message}`);
+    }
   }
-});
+);
 // PUT /profile/experience
 //add profile experience
 // @access private

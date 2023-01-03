@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   registerUser,
   loginUser,
+  deleteUserProfile,
   getUser,
   clearErrors,
   checkLogin,
@@ -99,6 +100,29 @@ const userSlice = createSlice({
       state.errorMessages.push(payload);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("data");
+    },
+    [deleteUserProfile.pending]: (state, { payload }) => {
+      state.loading = true;
+      state.loggInError = null;
+
+      state.errorMessages.push(payload);
+    },
+    [deleteUserProfile.fulfilled]: (state, { payload }) => {
+      state.userInfo = payload.data.user;
+      state.loading = false;
+      state.isLoggedIn = false;
+      state.isAuthenticated = false;
+      state.loggInError = [];
+      state.errorMessages = [];
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("data");
+    },
+    [deleteUserProfile.rejected]: (state, { payload }) => {
+      state.errorMessages = [];
+      state.loggInError = payload;
+      state.errorMessages.push(payload);
+
     },
 
     [getUser.pending]: (state, { payload }) => {

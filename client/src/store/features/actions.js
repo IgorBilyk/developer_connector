@@ -43,9 +43,7 @@ export const loginUser = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      console.log("init  login");
       const res = await axios.post("http://localhost:5000/auth", arg, config);
-      console.log("res from actions", res.data);
       return res;
     } catch (err) {
       return rejectWithValue(err.response);
@@ -93,6 +91,26 @@ export const checkLogin = createAsyncThunk(
     }
   }
 );
+// Add/Update Profile data
+export const addProfileData = createAsyncThunk(
+  "Add/Update/profile",
+  async (arg, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${arg.refreshToken}`,
+          "Content-Type": "application/json",
+        },
+      };
+      console.log(arg, "from action");
+      const res = await axios.post(`/`, arg.result, config);
+
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 // Add/Update user experience
 export const addExperience = createAsyncThunk(
   "Add/Update/experience",
@@ -121,7 +139,11 @@ export const deleteExperience = createAsyncThunk(
           "Content-Type": "application/json",
         },
       };
-      const res = await axios.delete(`/experience/${arg}/`, arg, config);
+      const res = await axios.delete(
+        `/experience/${arg.experience_id}/${arg.user_id}`,
+        arg,
+        config
+      );
 
       return res;
     } catch (err) {
@@ -158,7 +180,11 @@ export const deleteEducation = createAsyncThunk(
         },
       };
       console.log(arg);
-      const res = await axios.delete(`/education/${arg}/`, arg, config);
+      const res = await axios.delete(
+        `/education/${arg._id}/${arg.user_id}`,
+        arg,
+        config
+      );
 
       return res;
     } catch (err) {

@@ -36,6 +36,7 @@ const Login = () => {
     };
 
     dispatch(loginUser(data));
+    
   };
 /*   console.log(errors.msg);
  */  return (

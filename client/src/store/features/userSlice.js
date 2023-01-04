@@ -3,13 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   registerUser,
   loginUser,
+  addProfileData,
   deleteUserProfile,
   getUser,
   clearErrors,
   checkLogin,
   addExperience,
   deleteExperience,
-  addEducation
+  addEducation,
 } from "./actions";
 
 const token = localStorage.getItem("accessToken")
@@ -25,7 +26,7 @@ const userSlice = createSlice({
     isLoggedIn: false,
     /* userData: JSON.parse(localStorage.getItem("data")), */
     userData: [],
-    profileData: null,
+    profileData: [],
     loggInError: [],
     errorMessages: [],
     isAuthenticated: false,
@@ -101,6 +102,29 @@ const userSlice = createSlice({
       localStorage.removeItem("accessToken");
       localStorage.removeItem("data");
     },
+    [addProfileData.pending]: (state, { payload }) => {
+      state.loading = true;
+      state.loggInError = null;
+
+      state.errorMessages.push(payload);
+    },
+    [addProfileData.fulfilled]: (state, { payload }) => {
+      /* state.userInfo = payload.data; */
+      state.profileData = payload.data;
+      state.loading = false;
+      state.isLoggedIn = true;
+      state.isAuthenticated = true;
+      state.loggInError = [];
+      state.errorMessages = [];
+      console.log(payload.data);
+
+      localStorage.setItem("profile_data", JSON.stringify(payload.data));
+    },
+    [addProfileData.rejected]: (state, { payload }) => {
+      state.errorMessages = [];
+
+      state.errorMessages.push(payload);
+    },
     [deleteUserProfile.pending]: (state, { payload }) => {
       state.loading = true;
       state.loggInError = null;
@@ -122,7 +146,6 @@ const userSlice = createSlice({
       state.errorMessages = [];
       state.loggInError = payload;
       state.errorMessages.push(payload);
-
     },
 
     [getUser.pending]: (state, { payload }) => {

@@ -385,6 +385,40 @@ animation: fadeIn 0.5s, fadeOut 0.5s 1.5;
   cursor: pointer;
   opacity: 0.7;
 }
+/*Experience description, desplay while hovering on it*/
+.hovertext {
+  position: relative;
+  border-bottom: 1px dotted black;
+ 
+  
+}
+
+.hovertext:before {
+  content: attr(data-hover);
+  visibility: hidden;
+  opacity: 0;
+  width: 140px;
+  background-color: var(--dark-color);
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 110%;
+
+}
+
+.hovertext:hover:before {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s ease-in-out;
+  -webkit-transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -ms-transition: opacity 1s ease-in-out;
+  -o-transition: opacity 1s ease-in-out;
+}
 
 @keyframes fadeIn{
   from{opacity: 0; visibility: hidden;}

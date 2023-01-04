@@ -3,8 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+
+import { addProfileData } from "../../store/features/actions";
 import { getUser } from "../../store/features/actions";
 import Loading from "./Loading";
+import { Profile_Default } from "./Profile_Default/Profile_Default";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -21,18 +24,33 @@ const EditProfile = () => {
     { value: "Other", text: "Other" },
   ];
   const [selected, setSelected] = useState(options[0].value);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({
+    company: "default",
+    location: "default",
+    skills: "no skills",
+    githubusername: "githud",
+    bio: "no info",
+    website: "example.com ",
+  });
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(null);
-  const [socials, setSocials] = useState({});
+  const [socials, setSocials] = useState({
+    youtube: "youtube",
+    twitter: "twitter",
+    facebook: "facebook",
+    linkedin: "linkedin",
+    instagram: "instagram",
+  });
   const [success, setSuccess] = useState(false);
   const refreshToken = localStorage.getItem("refreshToken");
   const stateData = useSelector((state) => state.register);
-  const profileData = useSelector((state) => state.register?.profileData);
+  /*   const profileData = useSelector((state) => state.register?.profileData);
+   */ const profileData = JSON.parse(localStorage.getItem("profile_data"));
   //const id = profileData?.user._id;
 
   const id = JSON.parse(localStorage.getItem("data"))._id;
-  console.log(profileData);
+  const user_id = JSON.parse(localStorage.getItem("profile_data"))?._id;
+  const profile_data = JSON.parse(localStorage.getItem("profile_data"));
   const handleStatusChange = (e) => {
     setSelected(e.target.value, "selected");
   };
@@ -44,8 +62,38 @@ const EditProfile = () => {
   };
   const submitForm = async (e) => {
     e.preventDefault();
-
-    const config = {
+    const result = {
+      user: id,
+      social: {
+        youtube: socials.youtube
+          ? socials.youtube
+          : profileData?.social.youtube,
+        twitter: socials.twitter
+          ? socials.twitter
+          : profileData?.social.twitter,
+        facebook: socials.facebook
+          ? socials.facebook
+          : profileData?.social.facebook,
+        linkedin: socials.linkedin
+          ? socials.linkedin
+          : profileData?.social.linkedin,
+        instagram: socials.instagram
+          ? socials.instagram
+          : profileData?.social.instagram,
+      },
+      company: inputs.company ? inputs.company : profileData?.company,
+      location: inputs.location ? inputs.location : profileData?.location,
+      skills: inputs.skills ? inputs.skills : profileData?.skills,
+      githubusername: inputs.githubusername
+        ? inputs.githubusername
+        : profileData?.githubusername,
+      bio: inputs.bio ? inputs.bio : profileData?.bio,
+      status: selected ? selected : profileData?.status,
+      website: inputs.website ? inputs.website : profileData?.website,
+      status: "Junior Dev",
+    };
+    dispatch(addProfileData({ refreshToken, result }));
+    /* const config = {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
         "Content-Type": "application/json",
@@ -81,10 +129,10 @@ const EditProfile = () => {
       status: selected ? selected : profileData?.status,
       website: inputs.website ? inputs.website : profileData?.website,
     };
-    console.log(result);
+    console.log(result); */
 
     try {
-      await axios.post(
+      /* await axios.post(
         "http://localhost:5000/",
 
         result,
@@ -113,24 +161,25 @@ const EditProfile = () => {
         navigate("/dashboard");
       }, 1500);
 
-      return () => clearInterval(interval);
+      return () => clearInterval(interval); */
+      console.log("from edit profile");
     } catch (err) {
       console.log(err);
     }
   };
   useEffect(() => {
     //Get profile info of current user by id [Redux action]
-    if (profileData == null) {
-      console.log(profileData);
-    } else {
-      dispatch(getUser({ refreshToken, id }));
-    }
+
+    dispatch(getUser({ refreshToken, id }));
+
     const interval = setTimeout(() => {
       setLoading(false);
     }, 500);
     return () => clearInterval(interval);
   }, [count]);
-  return (
+
+  /*   console.log(JSON.parse(localStorage.getItem("profile_data"))._id);
+   */ return (
     <section className="container">
       <h1 className="large text-primary">Create Your Profile</h1>
       <p className="lead">
@@ -306,6 +355,14 @@ const EditProfile = () => {
         </form>
       )}
     </section>
+
+    /* <>
+      <h2>1</h2>
+      <h2>1</h2>
+      <h2>1</h2>
+      <button onClick={submitForm}>send </button>
+      {user_id == 1 ? 1 : <Profile_Default />}
+    </> */
   );
 };
 export default EditProfile;

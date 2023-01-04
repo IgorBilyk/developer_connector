@@ -9,12 +9,12 @@ export const Experience = ({ data, handleClick }) => {
   const [loading, setLoading] = useState(false);
   const { _id, company, title, location, from, to, current, description } =
     data;
-
+  const user_id = JSON.parse(localStorage.getItem("data"))._id;
   const handleDeleteExperience = (e) => {
     setLoading(true);
     e.preventDefault();
 
-    dispatch(deleteExperience(_id));
+    dispatch(deleteExperience({ experience_id: _id, user_id }));
     const interval = setTimeout(() => {
       handleClick();
       setLoading(false);
@@ -24,9 +24,16 @@ export const Experience = ({ data, handleClick }) => {
 
   return (
     <tr>
-      <td>{company}</td>
-      <td className="hide-sm">{title}</td>
-      <td className="hide-sm">
+      <td data-hover={`Description: ${description}`} className="hovertext">
+        {company}
+      </td>
+      <td className="hide-sm hovertext" data-hover={`Description: ${description}`}>
+        {title}
+      </td>
+      <td
+        className="hide-sm hovertext"
+        data-hover={`Description: ${description}`}
+      >
         {from.slice(0, 10)}{" "}
         {current ? " - Ongoing" : to ? ` - ${to.slice(0, 10)}` : ""}
       </td>

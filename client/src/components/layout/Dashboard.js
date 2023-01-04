@@ -22,7 +22,7 @@ const Dashboard = () => {
   const { isLoggedIn } = profileData;
   const { _id } = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   useEffect(() => {
-    /* dispatch(getUser({ accessToken: token, id: _id })); */
+    dispatch(getUser({ accessToken: token, id: _id }));
 
     dispatch(updateDashboard());
     const interval = setTimeout(() => {
@@ -48,7 +48,6 @@ const Dashboard = () => {
 
     setPopup((prev) => (prev = false));
   };
-  console.log(profileData);
   return (
     <section className="container">
       <h1 className="large text-primary">Dashboard</h1>
@@ -69,13 +68,12 @@ const Dashboard = () => {
         </Link>
       </div>
       <h2 className="my-2">Experience Credentials</h2>
-
-      {/*     {loading ? (
+      {loading ? (
         <Loading />
       ) : (
         <table className="table">
-          {!loading && profileData?.profileData[0].experience.length > 0 ? (
-            <DashboardHeader company={true} />
+          {!loading && profileData.profileData[0]?.experience.length > 0 ? (
+            <DashboardHeader company={false} />
           ) : (
             <tr>
               <th>No Experiences found!</th>
@@ -86,12 +84,28 @@ const Dashboard = () => {
           </tbody>
         </table>
       )}
+     {/*  {loading ? (
+        <Loading />
+      ) : (
+        <table className="table">
+          {JSON.parse(localStorage.getItem("profile_data"))?.experience.length >
+          0 ? (
+            <DashboardHeader company={true} />
+          ) : (
+            ""
+          )}
+          <tbody>
+            <DashboardHeader company={true} />
+            <Experiences handleClick={handleClick} />
+          </tbody>
+        </table>
+      )} */}
       <h2 className="my-2">Education Credentials</h2>
       {loading ? (
         <Loading />
       ) : (
         <table className="table">
-          {!loading && profileData.profileData[0].education.length > 0 ? (
+          {!loading && profileData.profileData[0]?.education.length > 0 ? (
             <DashboardHeader company={false} />
           ) : (
             <tr>
@@ -102,7 +116,7 @@ const Dashboard = () => {
             <Educations handleClick={handleClick} />
           </tbody>
         </table>
-      )} */}
+      )}
 
       <div className="my-2">
         <button className="btn btn-danger" onClick={showPopup}>

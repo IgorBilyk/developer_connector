@@ -18,12 +18,10 @@ const IndividualPost = () => {
   const [click, setClick] = useState(true);
   const refreshToken = localStorage.getItem("refreshToken");
   const handleClick = () => {
-    setClick((prev) => !prev);
-    console.log(click);
+    //update UI recent data setClick((prev) => !prev);
   };
 
   const { id } = useParams();
-  const time = post.date.slice(11, 16);
 
   useEffect(() => {
     axios
@@ -40,7 +38,6 @@ const IndividualPost = () => {
         }, loadingTime);
       });
   }, [click]);
-
   return (
     <section className="container mt-5">
       {!isLoading ? (
@@ -58,7 +55,8 @@ const IndividualPost = () => {
             <div>
               <p className="my-1">{post.text}</p>
               <p className="post-date">
-                Posted on | {post.date.substring(0, 10)} : {time}
+                Posted on | {post.date.substring(0, 10)} :{" "}
+                {post.date.slice(11, 16)}
               </p>
             </div>
             <div>

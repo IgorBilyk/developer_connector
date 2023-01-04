@@ -39,6 +39,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
+    console.log(req.body, "body data");
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -64,9 +65,7 @@ router.post(
     if (bio) profileFields.bio = bio;
     if (status) profileFields.status = status;
     if (githubusername) profileFields.githubusername = githubusername;
-    if (skills)
-      profileFields.skills =
-        skills /* .split(",").map((skill) => skill.trim()) */;
+    if (skills) profileFields.skills = skills;
 
     //build social profile
     profileFields.social = {};
@@ -93,6 +92,7 @@ router.post(
       console.error(err.message);
       res.status(500).send("Server Message");
     }
+    // res.send(req.body);
   }
 );
 // route  get all profiles
@@ -187,11 +187,11 @@ router.put(
 //Delete profile experience
 //@access private
 router.delete(
-  "/experience/:exp_id",
+  "/experience/:exp_id/:user_id",
   /* auth, */ async (req, res) => {
     try {
       const profile = await Profile.findOne({
-        user: "635ab0209953e7ce7b6d6d3e",
+        user: req.params.user_id,
       });
       const { experience } = profile;
       const removedIndx = experience
@@ -228,18 +228,10 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const {
-      _id,
-      school,
-      degree,
-      fieldofstudy,
-      from,
-      to,
-      current,
-      description,
-    } = req.body;
+    const { id, school, degree, fieldofstudy, from, to, current, description } =
+      req.body;
     const newEducation = {
-      _id,
+      id,
       school,
       degree,
       fieldofstudy,
@@ -248,10 +240,9 @@ router.put(
       current,
       description,
     };
+    console.log(req.body, "profile server");
     try {
-      const profile = await Profile.findOne({
-        user: "635ab0209953e7ce7b6d6d3e",
-      });
+      const profile = await Profile.findOne({ user: id });
       const { education } = profile;
       education.unshift(newEducation);
       await profile.save();
@@ -265,11 +256,11 @@ router.put(
 //Delete profile education
 //@access private
 router.delete(
-  "/education/:edu_id",
+  "/education/:edu_id/:user_id",
   /* auth, */ async (req, res) => {
     try {
       const profile = await Profile.findOne({
-        user: "635ab0209953e7ce7b6d6d3e",
+        user: req.params.user_id,
       });
       const { education } = profile;
       const removedIndx = education

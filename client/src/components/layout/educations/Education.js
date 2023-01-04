@@ -8,12 +8,12 @@ export const Education = ({ education, handleClick }) => {
   const [loading, setLoading] = useState(false);
   const { _id, school, degree, fieldofstudy, from, to, current, description } =
     education;
-
+  const user_id = JSON.parse(localStorage.getItem("data"))._id;
   const handleDeleteEducation = (e) => {
     setLoading(true);
     e.preventDefault();
-
-    dispatch(deleteEducation(_id));
+//Delete Education [Redux function]
+    dispatch(deleteEducation({ _id, user_id }));
     const interval = setTimeout(() => {
       handleClick();
       setLoading(false);

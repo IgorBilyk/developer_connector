@@ -18,7 +18,8 @@ const IndividualPost = () => {
   const [click, setClick] = useState(true);
   const refreshToken = localStorage.getItem("refreshToken");
   const handleClick = () => {
-    //update UI recent data setClick((prev) => !prev);
+    //update UI recent data
+    setClick((prev) => !prev);
   };
 
   const { id } = useParams();

@@ -94,7 +94,6 @@ router.post(
       const refreshTok = jwt.sign({ user: user._id }, secret_key, {
         expiresIn: "15d",
       });
-      console.log(accessTok, refreshTok);
 
       res.json({ user, accessTok, refreshTok });
     } catch (error) {

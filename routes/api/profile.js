@@ -29,7 +29,6 @@ router.get("/me", auth, async (req, res) => {
 
 // Create & update profile
 // route - profile router api/profile/
-
 router.post(
   "/",
 
@@ -240,7 +239,6 @@ router.put(
       current,
       description,
     };
-    console.log(req.body, "profile server");
     try {
       const profile = await Profile.findOne({ user: id });
       const { education } = profile;

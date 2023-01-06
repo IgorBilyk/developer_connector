@@ -12,7 +12,7 @@ export const Education = ({ education, handleClick }) => {
   const handleDeleteEducation = (e) => {
     setLoading(true);
     e.preventDefault();
-//Delete Education [Redux function]
+    //Delete Education [Redux function]
     dispatch(deleteEducation({ _id, user_id }));
     const interval = setTimeout(() => {
       handleClick();
@@ -20,12 +20,18 @@ export const Education = ({ education, handleClick }) => {
     }, 1000);
     return () => clearTimeout(interval);
   };
-
   return (
     <tr>
-      <td>{school}</td>
-      <td className="hide-sm">{degree}</td>
-      <td className="hide-sm">
+      <td className="hovertext"   data-hover={`${description} ? Description: ${description}:''`}>
+        {school}
+      </td>
+      <td
+        className="hide-sm hovertext"
+        data-hover={`${description} ? Description: ${description}:''`}
+      >
+        {degree}
+      </td>
+      <td className="hide-sm hovertext"   data-hover={`${description} ? Description: ${description}:''`}>
         {from.slice(0, 10)}{" "}
         {current ? " - Ongoing" : to ? ` - ${to.slice(0, 10)}` : ""}
       </td>

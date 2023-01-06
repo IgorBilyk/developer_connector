@@ -3,11 +3,10 @@ import { Link } from "react-router-dom";
 //redux import
 import { useSelector, useDispatch } from "react-redux";
 //import redux action functions
-import { registerUser, clearErrors } from "../../store/features/actions";
+import { registerUser } from "../../store/features/actions";
 import { hideAlert } from "../../store/features/userSlice";
 import "../../App.css";
 
-import Alert from "../layout/Alert";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -18,6 +17,7 @@ const Register = () => {
   const state = useSelector((state) => state.register);
 
   const [click, setClick] = useState(false);
+  const [passwordShown, setPasswordShown] = useState(false);
   const [inputs, setInputs] = useState({
     name: "",
     email: "",
@@ -41,8 +41,9 @@ const Register = () => {
       password2,
     };
     try {
-       dispatch(registerUser(newUser));
+      dispatch(registerUser(newUser));
       setClick((prev) => !prev);
+      window.redirect("/");
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +51,7 @@ const Register = () => {
   useEffect(() => {
     setTimeout(() => dispatch(hideAlert()), 2000);
   }, [click]);
-  
+
   return (
     <section className="container">
       <h1 className="large text-primary">Sign Up</h1>
@@ -72,6 +73,7 @@ const Register = () => {
             onChange={handleChange}
             value={name}
             required
+            autoComplete="off"
           />
         </div>
         <div className="form-group">
@@ -82,6 +84,7 @@ const Register = () => {
             value={email}
             onChange={handleChange}
             required
+            autoComplete="off"
           />
           <small className="form-text">
             This site uses Gravatar so if you want a profile image, use a
@@ -96,6 +99,7 @@ const Register = () => {
             value={password}
             onChange={handleChange}
             required
+            autoComplete="off"
           />
         </div>
         <div className="form-group">
@@ -106,6 +110,7 @@ const Register = () => {
             value={password2}
             onChange={handleChange}
             required
+            autoComplete="off"
           />
         </div>
 

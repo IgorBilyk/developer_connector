@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { addProfileData } from "../../store/features/actions";
 import { getUser } from "../../store/features/actions";
 import Loading from "./Loading";
-import { Profile_Default } from "./Profile_Default/Profile_Default";
 
 const EditProfile = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const profile_data = JSON.parse(localStorage.getItem("profile_data"));
   const options = [
     { value: "", text: "* Select Professional Status" },
     { value: "Developer", text: "Developer" },
@@ -25,32 +24,37 @@ const EditProfile = () => {
   ];
   const [selected, setSelected] = useState(options[0].value);
   const [inputs, setInputs] = useState({
-    company: "default",
-    location: "default",
-    skills: "no skills",
-    githubusername: "githud",
-    bio: "no info",
-    website: "example.com ",
+    company: profile_data?.company ? profile_data.company : "",
+    location: profile_data?.location ? profile_data.location : "",
+    skills: profile_data?.skills ? profile_data.skills : "",
+    githubusername: profile_data?.githubusername
+      ? profile_data.githubusername
+      : "",
+    bio: profile_data?.bio ? profile_data.bio : "",
+    website: profile_data?.website ? profile_data.website : "",
   });
   const [loading, setLoading] = useState(true);
   const [count, setCount] = useState(null);
   const [socials, setSocials] = useState({
-    youtube: "youtube",
-    twitter: "twitter",
-    facebook: "facebook",
-    linkedin: "linkedin",
-    instagram: "instagram",
+    youtube: profile_data?.social.youtube ? profile_data.social?.youtube : "",
+    twitter: profile_data?.social.twitter ? profile_data.social?.twitter : "",
+    facebook: profile_data?.social.facebook
+      ? profile_data.social?.facebook
+      : "",
+    linkedin: profile_data?.social.linkedin
+      ? profile_data.social?.linkedin
+      : "",
+    instagram: profile_data?.social.instagram
+      ? profile_data.social?.instagram
+      : "",
   });
   const [success, setSuccess] = useState(false);
   const refreshToken = localStorage.getItem("refreshToken");
-  const stateData = useSelector((state) => state.register);
-  /*   const profileData = useSelector((state) => state.register?.profileData);
-   */ const profileData = JSON.parse(localStorage.getItem("profile_data"));
-  //const id = profileData?.user._id;
+  const profileData = JSON.parse(localStorage.getItem("profile_data"));
 
   const id = JSON.parse(localStorage.getItem("data"))._id;
   const user_id = JSON.parse(localStorage.getItem("profile_data"))?._id;
-  const profile_data = JSON.parse(localStorage.getItem("profile_data"));
+
   const handleStatusChange = (e) => {
     setSelected(e.target.value, "selected");
   };
@@ -81,18 +85,24 @@ const EditProfile = () => {
           ? socials.instagram
           : profileData?.social.instagram,
       },
-      company: inputs.company ? inputs.company : profileData?.company,
-      location: inputs.location ? inputs.location : profileData?.location,
-      skills: inputs.skills ? inputs.skills : profileData?.skills,
-      githubusername: inputs.githubusername
-        ? inputs.githubusername
-        : profileData?.githubusername,
-      bio: inputs.bio ? inputs.bio : profileData?.bio,
-      status: selected ? selected : profileData?.status,
-      website: inputs.website ? inputs.website : profileData?.website,
-      status: "Junior Dev",
+      company: inputs.company,
+      location: inputs.location,
+      skills: inputs.skills,
+      githubusername: inputs.githubusername,
+      bio: inputs.bio,
+      status: selected,
+      website: inputs.website,
     };
+    console.log(refreshToken, result, "from edit profile");
     dispatch(addProfileData({ refreshToken, result }));
+    setSuccess(true);
+    const interval = setTimeout(() => {
+      setSuccess(false);
+      console.log("Success");
+      navigate("/dashboard");
+    }, 1500);
+
+    return () => clearInterval(interval);
     /* const config = {
       headers: {
         Authorization: `Bearer ${refreshToken}`,
@@ -178,8 +188,7 @@ const EditProfile = () => {
     return () => clearInterval(interval);
   }, [count]);
 
-  /*   console.log(JSON.parse(localStorage.getItem("profile_data"))._id);
-   */ return (
+  return (
     <section className="container">
       <h1 className="large text-primary">Create Your Profile</h1>
       <p className="lead">
@@ -211,7 +220,7 @@ const EditProfile = () => {
               name="company"
               onChange={handleInputsChange}
               value={inputs.company}
-              defaultValue={!loading ? profileData?.company : null}
+              autoComplete="off"
             />
             <small className="form-text">
               Could be your own company or one you work for
@@ -224,7 +233,7 @@ const EditProfile = () => {
               name="website"
               onChange={handleInputsChange}
               value={inputs.website}
-              defaultValue={!loading ? profileData?.website : null}
+              autoComplete="off"
             />
             <small className="form-text">
               Could be your own or a company website
@@ -237,7 +246,7 @@ const EditProfile = () => {
               name="location"
               onChange={handleInputsChange}
               value={inputs.location}
-              defaultValue={!loading ? profileData?.location : null}
+              autoComplete="off"
             />
             <small className="form-text">
               City & state suggested (eg. Boston, MA)
@@ -250,7 +259,7 @@ const EditProfile = () => {
               name="skills"
               onChange={handleInputsChange}
               value={inputs.skills}
-              defaultValue={!loading ? profileData?.skills[0].toString() : null}
+              autoComplete="off"
               required
             />
             <small className="form-text">
@@ -264,7 +273,7 @@ const EditProfile = () => {
               name="githubusername"
               onChange={handleInputsChange}
               value={inputs.githubusername}
-              defaultValue={!loading ? profileData?.githubusername : null}
+              autoComplete="off"
             />
             <small className="form-text">
               If you want your latest repos and a Github link, include your
@@ -277,7 +286,7 @@ const EditProfile = () => {
               name="bio"
               onChange={handleInputsChange}
               value={inputs.bio}
-              defaultValue={!loading ? profileData?.bio : null}
+              autoComplete="off"
               style={{ overflow: "auto", resize: "none" }}
             ></textarea>
             <small className="form-text">Tell us a little about yourself</small>
@@ -296,7 +305,7 @@ const EditProfile = () => {
               name="twitter"
               onChange={handleSocialsChange}
               value={socials.twitter}
-              defaultValue={!loading ? profileData?.social.twitter : null}
+              autoComplete="off"
             />
           </div>
 
@@ -308,7 +317,7 @@ const EditProfile = () => {
               name="facebook"
               onChange={handleSocialsChange}
               value={socials.facebook}
-              defaultValue={!loading ? profileData?.social.facebook : null}
+              autoComplete="off"
             />
           </div>
 
@@ -320,7 +329,7 @@ const EditProfile = () => {
               name="youtube"
               onChange={handleSocialsChange}
               value={socials.youtube}
-              defaultValue={!loading ? profileData?.social.youtube : null}
+              autoComplete="off"
             />
           </div>
 
@@ -332,7 +341,7 @@ const EditProfile = () => {
               name="linkedin"
               onChange={handleSocialsChange}
               value={socials.linkedin}
-              defaultValue={!loading ? profileData?.social.linkedin : null}
+              autoComplete="off"
             />
           </div>
 
@@ -344,7 +353,7 @@ const EditProfile = () => {
               name="instagram"
               onChange={handleSocialsChange}
               value={socials.instagram}
-              defaultValue={!loading ? profileData?.social.instagram : null}
+              autoComplete="off"
             />
           </div>
           {success && <h3 className="success">Success!</h3>}
@@ -355,14 +364,6 @@ const EditProfile = () => {
         </form>
       )}
     </section>
-
-    /* <>
-      <h2>1</h2>
-      <h2>1</h2>
-      <h2>1</h2>
-      <button onClick={submitForm}>send </button>
-      {user_id == 1 ? 1 : <Profile_Default />}
-    </> */
   );
 };
 export default EditProfile;

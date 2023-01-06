@@ -25,8 +25,9 @@ const AddEducation = () => {
       id: JSON.parse(localStorage.getItem("data"))._id,
       current: checkbox,
     };
-    if (inputs.from > inputs.to)
-      setError("Please, check validity of 'to' date!");
+    if (inputs.from > inputs.to) {
+      return setError("Please, check validity of 'to' date!");
+    }
     dispatch(addEducation(data));
     setInputs({
       school: "",

@@ -534,9 +534,16 @@ button {
 .table th,
 .table td {
   padding: 1rem;
+  margin: 1rem;
   text-align: left;
-}
 
+}
+td{
+  padding: 1rem;
+  text-align: left;
+  background-color: var(--light-color);
+
+}
 .table th {
   background: var(--light-color);
 }

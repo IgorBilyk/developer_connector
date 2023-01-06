@@ -45,8 +45,10 @@ const userSlice = createSlice({
     logOut: (state) => {
       state.isLoggedIn = false;
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       state.userData = [];
       localStorage.removeItem("data");
+      localStorage.removeItem("profile_data");
       window.location("/");
       console.log("Logout");
     },
@@ -67,6 +69,7 @@ const userSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       localStorage.setItem("accessToken", payload);
+      window.location("/");
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.errorMessages = [];
@@ -109,7 +112,6 @@ const userSlice = createSlice({
       state.errorMessages.push(payload);
     },
     [addProfileData.fulfilled]: (state, { payload }) => {
-      /* state.userInfo = payload.data; */
       state.profileData = payload.data;
       state.loading = false;
       state.isLoggedIn = true;
@@ -152,11 +154,13 @@ const userSlice = createSlice({
       state.loading = true;
     },
     [getUser.fulfilled]: (state, { payload }) => {
-      state.loading = false;
+      localStorage.setItem("profile_data", JSON.stringify(payload));
 
+      state.loading = false;
       state.errorMessages = [];
       state.profileData = [];
       state.profileData.push(payload);
+      console.log(payload);
     },
     [getUser.rejected]: (state, { payload }) => {
       state.errorMessages = payload;

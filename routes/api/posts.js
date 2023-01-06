@@ -125,13 +125,19 @@ router.patch(
         path: "user",
         select: ["name", "avatar"],
       });
-      console.log(req.body);
 
       const data = {
-        comments: [...post.comments, { text: req.body.comment,avatar: req.body.userAvatar,name: req.body.userName,user: req.body.userID }],
+        comments: [
+          ...post.comments,
+          {
+            text: req.body.comment,
+            avatar: req.body.userAvatar,
+            name: req.body.userName,
+            user: req.body._id,
+          },
+        ],
       };
       Object.assign(post, data);
-      console.log(post);
 
       await post.save();
 

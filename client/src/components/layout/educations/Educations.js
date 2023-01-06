@@ -3,11 +3,7 @@ import { useSelector } from "react-redux";
 
 import { Education } from "./Education";
 
-export const Educations = ({ handleClick }) => {
-  //Get data from profile redux store
-  const educations = useSelector(
-    (state) => state.register.profileData[0].education
-  );
+export const Educations = ({ handleClick, educations }) => {
   return (
     <>
       {educations.map((education) => (

@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   //Get data from profile redux store
   const profileData = useSelector((state) => state.register);
-  const postsState = useSelector((state) => state.posts.click);
+
   const { isLoggedIn } = profileData;
   const { _id } = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
   useEffect(() => {
@@ -31,10 +31,17 @@ const Dashboard = () => {
 
     return () => clearInterval(interval);
   }, [clicked]);
-
   const token = localStorage.getItem("accessToken");
   const userData = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
 
+  const educations =
+    JSON.parse(localStorage.getItem("profile_data"))?.education.length > 0
+      ? JSON.parse(localStorage.getItem("profile_data")).education
+      : [];
+  const experiences =
+    JSON.parse(localStorage.getItem("profile_data"))?.experience.length > 0
+      ? JSON.parse(localStorage.getItem("profile_data")).experience
+      : [];
   const handleClick = () => {
     setClicked((prev) => !prev);
   };
@@ -68,11 +75,23 @@ const Dashboard = () => {
         </Link>
       </div>
       <h2 className="my-2">Experience Credentials</h2>
-      {loading ? (
+      {loading && <Loading />}
+      {!loading && experiences.length > 0 ? (
+        <table>
+          <DashboardHeader company={true} />
+
+          <tbody>
+            <Experiences experiences={experiences} />
+          </tbody>
+        </table>
+      ) : (
+        "No experiences found"
+      )}
+      {/* {loading ? (
         <Loading />
       ) : (
         <table className="table">
-          {!loading && profileData.profileData[0]?.experience.length > 0 ? (
+          {experiences ? (
             <DashboardHeader company={false} />
           ) : (
             <tr>
@@ -80,11 +99,15 @@ const Dashboard = () => {
             </tr>
           )}
           <tbody>
-            <Experiences handleClick={handleClick} />
+            <Experiences
+              handleClick={handleClick}
+              experiences={!experiences ? ["No experinces found"] : experiences}
+            />
           </tbody>
         </table>
-      )}
-     {/*  {loading ? (
+      )} */}
+      {/*  */}
+      {/*  {loading ? (
         <Loading />
       ) : (
         <table className="table">
@@ -101,7 +124,19 @@ const Dashboard = () => {
         </table>
       )} */}
       <h2 className="my-2">Education Credentials</h2>
-      {loading ? (
+      {loading && <Loading />}
+      {!loading && educations.length > 0 ? (
+        <table>
+          <DashboardHeader company={false} />
+
+          <tbody>
+            <Educations educations={educations} />
+          </tbody>
+        </table>
+      ) : (
+        "No educations found"
+      )}
+      {/*  {loading ? (
         <Loading />
       ) : (
         <table className="table">
@@ -113,11 +148,12 @@ const Dashboard = () => {
             </tr>
           )}
           <tbody>
-            <Educations handleClick={handleClick} />
+                       <Educations handleClick={handleClick} />
+            
           </tbody>
         </table>
       )}
-
+ */}
       <div className="my-2">
         <button className="btn btn-danger" onClick={showPopup}>
           <i className="fas fa-user-minus"></i>

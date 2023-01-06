@@ -1,1 +1,5 @@
 issue 01 = related to state profile data error when user create an account but not profile info is yet filled in 
+to do 
+correct redirect after registration 
+display errors in registration page
+

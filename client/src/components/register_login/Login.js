@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-//import axios from "axios ";
 import { Link } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../store/features/actions";
 
 import "../../App.css";
-import Alert from "../layout/Alert";
 
 const Login = () => {
   //redux state initialization
@@ -38,8 +36,7 @@ const Login = () => {
     dispatch(loginUser(data));
     
   };
-/*   console.log(errors.msg);
- */  return (
+  return (
     <section className="container">
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
@@ -59,6 +56,8 @@ const Login = () => {
             value={email}
             required
             onChange={handleChange}
+            autoComplete="off"
+
           />
         </div>
         <div className="form-group">
@@ -69,6 +68,8 @@ const Login = () => {
             value={password}
             required
             onChange={handleChange}
+            autoComplete="off"
+
           />
         </div>
         <input type="submit" className="btn btn-primary" value="Login" />

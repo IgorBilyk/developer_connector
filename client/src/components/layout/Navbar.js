@@ -1,20 +1,21 @@
 import React, { Fragment} from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+import "../../App.css";
 
 import { useSelector, useDispatch } from "react-redux";
+
 import { logOut } from "../../store/features/userSlice";
 
-import "../../App.css";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const stateData = useSelector((state) => state.register);
-  const { isLoggedIn, userData: data } = stateData;
+  const { isLoggedIn } = stateData;
   const userData = isLoggedIn ? JSON.parse(localStorage.getItem("data")) : null;
-  const name = stateData?.userInfo?.name;
   const test = async () => {
     const accessToken = localStorage.getItem("accessToken");
 

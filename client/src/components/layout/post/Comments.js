@@ -16,7 +16,7 @@ const Comments = ({ comments, name, id, userId, avatar, handleClick }) => {
   const [comment, setComment] = useState("");
   const refreshToken = localStorage.getItem("refreshToken");
   const userData = JSON.parse(localStorage.getItem("data"));
-  const { userAvatar = avatar, userName = name } = userData;
+  const { userAvatar = avatar, userName = name, _id } = userData;
   const handleCommentBox = () => {
     setActive(!active);
   };
@@ -30,7 +30,7 @@ const Comments = ({ comments, name, id, userId, avatar, handleClick }) => {
     e.preventDefault();
     axios.patch(
       `http://localhost:5000/post/comments/${id}`,
-      { comment, userName, userAvatar },
+      { comment, userName, userAvatar, _id },
       {
         headers: {
           "Content-Type": "application/json",
@@ -71,6 +71,7 @@ const Comments = ({ comments, name, id, userId, avatar, handleClick }) => {
           comments.map((comment) => {
             return (
               <Comment
+                user_id={_id}
                 comment={comment}
                 key={comment._id}
                 text={comment.text}

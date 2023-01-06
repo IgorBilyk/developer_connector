@@ -5,7 +5,7 @@ const Comment = ({
   text,
   name,
   id,
-  userId,
+  user_id,
   avatar,
   handleClick,
   comment,
@@ -23,7 +23,8 @@ const Comment = ({
     });
     handleClick();
   };
-
+  const current_user_id = JSON.parse(localStorage.getItem("data"))._id;
+  console.log(user_id, current_user_id);
   return (
     <div className="comments">
       <div className="post bg-white p-1 my-1">
@@ -40,9 +41,13 @@ const Comment = ({
           <p className="post-date">
             {comment.date.slice(0, 10)} : {time}{" "}
           </p>
-          <button className="btn btn-danger" onClick={removeComment}>
-            Remove
-          </button>
+          {current_user_id !== user_id ? (
+            ""
+          ) : (
+            <button className="btn btn-danger" onClick={removeComment}>
+              Remove
+            </button>
+          )}
         </div>
       </div>
     </div>

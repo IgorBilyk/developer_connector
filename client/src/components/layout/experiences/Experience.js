@@ -21,19 +21,16 @@ export const Experience = ({ data, handleClick }) => {
     }, 1000);
     return () => clearTimeout(interval);
   };
-
+  const descr = !description ? " " : description;
   return (
     <tr>
-      <td data-hover={`Description: ${description}`} className="hovertext">
+      <td data-hover={`Description: ${descr}`} className="hovertext">
         {company}
       </td>
-      <td className="hide-sm hovertext" data-hover={`Description: ${description}`}>
+      <td className="hide-sm hovertext" data-hover={`Description: ${descr}`}>
         {title}
       </td>
-      <td
-        className="hide-sm hovertext"
-        data-hover={`Description: ${description}`}
-      >
+      <td className="hide-sm hovertext" data-hover={`Description: ${descr}`}>
         {from.slice(0, 10)}{" "}
         {current ? " - Ongoing" : to ? ` - ${to.slice(0, 10)}` : ""}
       </td>

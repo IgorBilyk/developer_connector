@@ -3,11 +3,11 @@ import { useSelector } from "react-redux";
 
 import { Experience } from "./Experience";
 
-export const Experiences = ({ handleClick }) => {
+export const Experiences = ({ handleClick,experiences }) => {
   //Get data from profile redux store
-  const experiences = useSelector(
-    (state) => state.register.profileData[0].experience
-  );
+ /*  const experiences = useSelector(
+    (state) => state.register.profileData[0]?.experience
+  ); */
 
   return (
     <>

@@ -37,7 +37,6 @@ const userSlice = createSlice({
       const data = action.payload;
       state.errorMessages.push({ msg: data });
 
-      console.log(action);
     },
     hideAlert: (state) => {
       state.errorMessages = [];
@@ -50,7 +49,6 @@ const userSlice = createSlice({
       localStorage.removeItem("data");
       localStorage.removeItem("profile_data");
       window.location("/");
-      console.log("Logout");
     },
     checkLogin: (state) => {
       if (localStorage.getItem("token")) {
@@ -118,7 +116,6 @@ const userSlice = createSlice({
       state.isAuthenticated = true;
       state.loggInError = [];
       state.errorMessages = [];
-      console.log(payload.data);
 
       localStorage.setItem("profile_data", JSON.stringify(payload.data));
     },
@@ -160,7 +157,6 @@ const userSlice = createSlice({
       state.errorMessages = [];
       state.profileData = [];
       state.profileData.push(payload);
-      console.log(payload);
     },
     [getUser.rejected]: (state, { payload }) => {
       state.errorMessages = payload;

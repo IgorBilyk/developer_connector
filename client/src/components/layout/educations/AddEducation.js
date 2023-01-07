@@ -10,7 +10,6 @@ const AddEducation = () => {
   const [inputs, setInputs] = useState([]);
   const [checkbox, setCheckbox] = useState(false);
   const [error, setError] = useState(null);
-  const stateData = useSelector((state) => state.register);
 
   const handleInputs = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
@@ -40,6 +39,17 @@ const AddEducation = () => {
 
     setTimeout(() => navigate("/dashboard"), 1000);
   };
+
+  const date = new Date();
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  // This arrangement can be altered based on how we want the date's format to appear.
+  let currentDate = `${year}-${month < 10 ? "0" + month : month}-${
+    day < 10 ? "0" + day : day
+  }`;
   return (
     <section className="container">
       <h1 className="large text-primary">Add Your Education</h1>
@@ -77,7 +87,17 @@ const AddEducation = () => {
         </div>
         <div className="form-group">
           <h4>From Date</h4>
-          <input type="date" name="from" onChange={handleInputs} />
+          <input
+            type="date"
+            name="from"
+            value={inputs.from}
+            min="1960-01-01"
+            max={currentDate}
+            onChange={handleInputs}
+            onKeyDown={(e) => {
+              e.preventDefault();
+            }}
+          />
         </div>
         <div className="form-group">
           <p>
@@ -95,7 +115,18 @@ const AddEducation = () => {
         ) : (
           <div className="form-group">
             <h4>To Date</h4>
-            <input type="date" name="to" onChange={handleInputs} />
+            <input
+              type="date"
+              name="to"
+              onChange={handleInputs}
+              min={inputs.from}
+              max={currentDate}
+              value={inputs.to}
+              defaultValue={currentDate}
+              onKeyDown={(e) => {
+                e.preventDefault();
+              }}
+            />
           </div>
         )}
         <div className="form-group">

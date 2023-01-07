@@ -12,23 +12,23 @@ const AddExperience = () => {
   const [inputs, setInputs] = useState([]);
   const [checkbox, setCheckbox] = useState(false);
   const [error, setError] = useState(null);
-  const stateData = useSelector((state) => state.register);
 
   const handleInputs = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
+    console.log(inputs, error);
   };
   const checkboxHandle = (e) => {
     setCheckbox((prev) => !prev);
   };
   const handleForm = (e) => {
     e.preventDefault();
-    const data = {
+      const data = {
       ...inputs,
       id: JSON.parse(localStorage.getItem("data"))._id,
       current: checkbox,
     };
     if (inputs.from > inputs.to) setError("Please, check validity of to date!");
-    dispatch(addExperience(data));
+        dispatch(addExperience(data));
     setInputs({
       title: "",
       company: "",
@@ -39,6 +39,17 @@ const AddExperience = () => {
     });
     setTimeout(() => navigate("/dashboard"), 1000);
   };
+  const date = new Date();
+
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  // This arrangement can be altered based on how we want the date's format to appear.
+  let currentDate = `${year}-${month < 10 ? "0" + month : month}-${
+    day < 10 ? "0" + day : day
+  }`;
+  console.log(currentDate, inputs);
   return (
     <section className="container">
       <h1 className="large text-primary">Add An Experience</h1>
@@ -82,9 +93,14 @@ const AddExperience = () => {
           <input
             type="date"
             name="from"
+            min="1960-01-01"
+            max={currentDate}
             value={inputs.from}
             onChange={handleInputs}
             required
+            onKeyDown={(e) => {
+              e.preventDefault();
+            }}
           />
         </div>
         <div className="form-group">
@@ -100,14 +116,20 @@ const AddExperience = () => {
         </div>
         <div className="form-group">
           <h4 style={{ display: checkbox ? "none" : "block" }}>To Date</h4>
-          {!checkbox && error && <p>{error}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
           <input
             type="date"
             name="to"
             onChange={handleInputs}
+            min={inputs.from}
+            max={currentDate}
             value={inputs.to}
+            defaultValue={currentDate}
             style={{ display: checkbox ? "none" : "block" }}
+            onKeyDown={(e) => {
+              e.preventDefault();
+            }}
           />
         </div>
         <div className="form-group">
